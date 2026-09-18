@@ -1,0 +1,42 @@
+# Blue Berry — Godot 4.7 .gitignore (project root is repo root)
+# Keep *.import for stable UIDs, ignore generated cache.
+
+# Godot generated
+.godot/
+export/
+export_presets.cfg
+*.tmp
+*.translation
+
+# Godot 4: keep .import but ignore imported data if you prefer
+# *.import   # uncomment to ignore imports (not recommended — UIDs live in .import)
+# .import/
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+*.swp
+*~
+
+# VS Code — keep .vscode/launch.json & settings.json, ignore caches
+.vscode/.ropeproject
+.vscode/ipch/
+.vscode/*.log
+*.code-workspace
+
+# OpenCode / Node
+.opencode/node_modules/
+.opencode/.opencode/
+node_modules/
+package-lock.json
+
+# Backup / temp
+*.bak
+*.orig
+~$*
+
+# Build artifacts (if exporting)
+build/
+dist/

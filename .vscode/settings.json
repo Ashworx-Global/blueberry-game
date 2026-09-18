@@ -1,0 +1,27 @@
+{
+	// Blue Berry — VS Code + godot-tools (geequlim.godot-tools)
+	// Points VS Code at your local Godot 4.7.2 install. Change if you move Godot.
+	"godotTools.editorPath.godot4": "C:\\Dev\\Gadot\\Godot_v4.7.2-stable_win64.exe",
+	"godotTools.editorPath.godot3": "C:\\Dev\\Gadot\\Godot_v4.7.2-stable_win64.exe",
+
+	// GDScript Language Server — headless LSP is stable for BlueBerry, no editor window
+	"godotTools.lsp.serverHost": "127.0.0.1",
+	"godotTools.lsp.serverPort": 6008,
+	"godotTools.lsp.headless": false,
+	"godotTools.lsp.autoReconnect.enabled": true,
+
+	// Editor QoL
+	"godotTools.editor.verbose": false,
+	"files.associations": {
+		"*.gd": "gdscript",
+		"*.tscn": "gdscene",
+		"*.tres": "gdresource"
+	},
+	"editor.formatOnSave": false,
+	// recommend 4-space indents to match GDScript style
+	"[gdscript]": {
+		"editor.tabSize": 4,
+		"editor.insertSpaces": false,
+		"editor.detectIndentation": false
+	}
+}

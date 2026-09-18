@@ -1,0 +1,115 @@
+[gd_scene load_steps=7 format=3 uid="uid://b1ueb3rry_enemy"]
+
+[ext_resource type="Script" path="res://scripts/enemy.gd" id="1_enemy"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_enemy"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"run",
+"speed": 8.0
+}, {
+"frames": [],
+"loop": false,
+"name": &"attack",
+"speed": 10.0
+}, {
+"frames": [],
+"loop": false,
+"name": &"hurt",
+"speed": 8.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(14, 18)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurt"]
+size = Vector2(14, 18)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hit"]
+size = Vector2(22, 14)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_det"]
+radius = 220.0
+
+[node name="Enemy" type="CharacterBody2D" groups=["enemy"]]
+script = ExtResource("1_enemy")
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -7)
+shape = SubResource("RectangleShape2D_body")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -12)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_enemy")
+animation = &"idle"
+autoplay = "idle"
+texture_filter = 0
+
+[node name="Placeholder" type="Node2D" parent="AnimatedSprite2D"]
+
+[node name="Body" type="ColorRect" parent="AnimatedSprite2D/Placeholder"]
+offset_left = -7.0
+offset_top = -8.0
+offset_right = 7.0
+offset_bottom = 8.0
+color = Color(0.35, 0.72, 0.35, 1)
+
+[node name="EyeL" type="ColorRect" parent="AnimatedSprite2D/Placeholder"]
+offset_left = -5.0
+offset_top = -4.0
+offset_right = -2.0
+offset_bottom = -1.0
+color = Color(0.1, 0.1, 0.1, 1)
+
+[node name="EyeR" type="ColorRect" parent="AnimatedSprite2D/Placeholder"]
+offset_left = 2.0
+offset_top = -4.0
+offset_right = 5.0
+offset_bottom = -1.0
+color = Color(0.1, 0.1, 0.1, 1)
+
+[node name="Hurtbox" type="Area2D" parent="." groups=["enemy_hurtbox"]]
+collision_layer = 8
+collision_mask = 4
+monitorable = true
+monitoring = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -7)
+shape = SubResource("RectangleShape2D_hurt")
+
+[node name="Hitbox" type="Area2D" parent="." groups=["enemy_attack"]]
+collision_layer = 16
+collision_mask = 2
+monitorable = false
+monitoring = false
+position = Vector2(14, -9)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_hit")
+
+[node name="HitDebug" type="ColorRect" parent="Hitbox"]
+offset_left = -11.0
+offset_top = -7.0
+offset_right = 11.0
+offset_bottom = 7.0
+color = Color(1, 0.2, 0.2, 0.4)
+visible = false
+
+[node name="Detection" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 0
+monitorable = false
+monitoring = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Detection"]
+shape = SubResource("CircleShape2D_det")

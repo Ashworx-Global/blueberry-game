@@ -1,0 +1,14 @@
+# Blue Berry — Git attributes (Godot text files as lf)
+*.gd text eol=lf linguist-language=GDScript
+*.tscn text eol=lf
+*.tres text eol=lf
+*.cfg text eol=lf
+*.godot text eol=lf
+*.import text eol=lf
+*.svg text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.gdshader text eol=lf
+*.shader text eol=lf
+# Keep line endings consistent across win/mac/linux
+* text=auto

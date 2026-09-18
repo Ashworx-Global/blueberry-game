@@ -1,0 +1,64 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Blue Berry: Launch Project (F5)",
+			"type": "godot",
+			"request": "launch",
+			"project": "${workspaceFolder}",
+			"port": 6007,
+			"address": "127.0.0.1",
+			"scene": "main",
+			"editor_path": "C:\\Dev\\Gadot\\Godot_v4.7.2-stable_win64.exe",
+			"debug_collisions": false,
+			"profiling": false
+		},
+		{
+			"name": "Blue Berry: Launch Current Scene",
+			"type": "godot",
+			"request": "launch",
+			"project": "${workspaceFolder}",
+			"port": 6007,
+			"address": "127.0.0.1",
+			"scene": "current",
+			"editor_path": "C:\\Dev\\Gadot\\Godot_v4.7.2-stable_win64.exe"
+		},
+		{
+			"name": "Blue Berry: Launch Pinned Scene",
+			"type": "godot",
+			"request": "launch",
+			"project": "${workspaceFolder}",
+			"port": 6007,
+			"address": "127.0.0.1",
+			"scene": "pinned",
+			"editor_path": "C:\\Dev\\Gadot\\Godot_v4.7.2-stable_win64.exe"
+		},
+		{
+			"name": "Blue Berry: Debug Collisions",
+			"type": "godot",
+			"request": "launch",
+			"project": "${workspaceFolder}",
+			"port": 6007,
+			"address": "127.0.0.1",
+			"scene": "main",
+			"editor_path": "C:\\Dev\\Gadot\\Godot_v4.7.2-stable_win64.exe",
+			"debug_collisions": true,
+			"debug_paths": true,
+			"debug_navigation": true
+		},
+		{
+			"name": "Blue Berry: Attach (Godot running)",
+			"type": "godot",
+			"request": "attach",
+			"port": 6007,
+			"address": "127.0.0.1"
+		}
+	],
+	"compounds": [
+		{
+			"name": "Blue Berry: Compound — Launch + LSP",
+			"configurations": ["Blue Berry: Launch Project (F5)"],
+			"stopAll": true
+		}
+	]
+}

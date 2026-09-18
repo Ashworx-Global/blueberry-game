@@ -1,0 +1,77 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Blue Berry: Run Project (no debug)",
+			"type": "shell",
+			"command": "& 'C:\\Dev\\Gadot\\Godot_v4.7.2-stable_win64.exe' --path '${workspaceFolder}'",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "shared",
+				"focus": false
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Blue Berry: Run Current Scene",
+			"type": "shell",
+			"command": "& 'C:\\Dev\\Gadot\\Godot_v4.7.2-stable_win64.exe' --path '${workspaceFolder}' '${file}'",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Blue Berry: Check (headless --check-only)",
+			"type": "shell",
+			"command": "& 'C:\\Dev\\Gadot\\Godot_v4.7.2-stable_win64_console.exe' --headless --path '${workspaceFolder}' --check-only",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"group": "test",
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"panel": "shared"
+			},
+			"problemMatcher": "$gcc"
+		},
+		{
+			"label": "Blue Berry: Headless Quit (smoke test)",
+			"type": "shell",
+			"command": "& 'C:\\Dev\\Gadot\\Godot_v4.7.2-stable_win64_console.exe' --headless --path '${workspaceFolder}' --quit",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Blue Berry: Open in Godot Editor",
+			"type": "shell",
+			"command": "& 'C:\\Dev\\Gadot\\Godot_v4.7.2-stable_win64.exe' --path '${workspaceFolder}' -e",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"presentation": {
+				"reveal": "never"
+			},
+			"problemMatcher": []
+		}
+	]
+}

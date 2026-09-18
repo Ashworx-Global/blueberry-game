@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <rect width="128" height="128" rx="22" fill="#2a2a3a"/>
+  <!-- blueberry -->
+  <circle cx="64" cy="74" r="28" fill="#4a6bff" stroke="#1a2a6a" stroke-width="4"/>
+  <circle cx="74" cy="66" r="6" fill="#8aa0ff" opacity="0.9"/>
+  <!-- crown -->
+  <path d="M54 46 L64 32 L74 46 Z" fill="#6bff8a" stroke="#1a4a2a" stroke-width="3" stroke-linejoin="round"/>
+  <!-- rabbit ears hint -->
+  <ellipse cx="48" cy="36" rx="10" ry="22" fill="#ffb6e6" stroke="#2a2a3a" stroke-width="3"/>
+  <ellipse cx="80" cy="36" rx="10" ry="22" fill="#ffb6e6" stroke="#2a2a3a" stroke-width="3"/>
+  <ellipse cx="48" cy="38" rx="5" ry="12" fill="#ff7ac4"/>
+  <ellipse cx="80" cy="38" rx="5" ry="12" fill="#ff7ac4"/>
+</svg>
