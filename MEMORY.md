@@ -71,6 +71,7 @@
 | `blueberry_1.png` | `uid://ddp8fxr6as2ox` | player `SpriteFrames` source (64×64) |
 | `assets/environment/kipper_falcon/…` | — | forest trees/rocks obstacles (see its `ASSET_NOTES.md`) |
 | `assets/environment/morbid_ember/…` | — | 64 RPG item icons, MIT (see its `ASSET_NOTES.md`); `blueberries_01`/`potion_red_01` reserved for pickups |
+| `tools/screenshot.gd` | — | dev-only screenshot harness (SceneTree); regenerates `docs/showcase/*.png` |
 | `scenes/Background.tscn` | `uid://b1ueb3rry_bg` | parallax layers + ground shader mount |
 | `scripts/background.gd` | — | period wrap (`SKY 1280/CLOUD 256/FOREST 512`), pinned FG strips |
 | `assets/backgrounds/*.png` | — | tileable forest set; edit rules `parallax_spec.md` §10 |
@@ -113,6 +114,7 @@ Masks must overlap: `player_attack 4 → enemy_hurtbox 8`, `enemy_attack 16 → 
 | `ERROR Can't change monitoring while flushing queries. Use call_deferred` | `collision.disabled = true` inside `take_damage`/`_die` during `area_entered` physics flush | Use `set_deferred("monitoring",…)` / `set_deferred("disabled",…)` (`player.gd:208` `enemy.gd:154` `player.gd:240`) |
 | Game never starts — splash stays | `StartScreen.process_mode = WHEN_PAUSED` but `get_tree().paused=false` → screen never processes input | Change to `PROCESS_MODE_ALWAYS` (`start_screen.gd:18` `game_over_screen.gd:15`) + handle both `_input` + `_unhandled_input` |
 | `StartButton` click blocked | `BG ColorRect` `mouse_filter=STOP` covering button | Set `mouse_filter=2 IGNORE` (`StartScreen.tscn:23` `GameOverScreen.tscn:14`) |
+| Parallax layers vanish (grey bands, only right sliver draws) | Assigning `TextureRect.position` overwrites `offset_left/top` — designed frame destroyed, rects slide to x≥0 | Never assign `.position` on scroll rects; shift `offset_left/right/top/bottom` around stored base consts (`background.gd`) |
 | `Enemy.tscn` AttackBox not hitting | Missing `script=enemy.gd` or layers | Keep `script` + `AttackBox layer16 mask1` |
 
 **General fix loop:** `Close Godot → delete .godot → Godot --headless --path . --import → patch ext_resource uids → reopen → Headless --quit → 0 WARNING`.

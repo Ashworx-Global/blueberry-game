@@ -2,6 +2,12 @@
 
 Pixel-art **Beat 'em Up / Belt-Scroll Brawler** (Golden Axe-like). Rabbit hero hops to dodge encircling berries, mobs with front swipe. Now with Start Splash + Game Over + restart loop.
 
+## Showcase
+
+![Forest gameplay](docs/showcase/shot-forest.png)
+
+Title, ridge, and forest-floor captures with retake instructions live in [`docs/showcase/SHOWCASE.md`](docs/showcase/SHOWCASE.md).
+
 ## Quick Start
 
 | Task | Command |
