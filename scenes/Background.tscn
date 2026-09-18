@@ -1,16 +1,18 @@
 [gd_scene load_steps=8 format=3 uid="uid://b1ueb3rry_bg"]
 
 [ext_resource type="Script" path="res://scripts/background.gd" id="1_bg"]
-[ext_resource type="Texture2D" path="res://assets/backgrounds/sky_mountains.png" id="2_sky"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/bg_distant_treeline.png" id="2_sky"]
 [ext_resource type="Texture2D" path="res://assets/backgrounds/clouds.png" id="3_cloud"]
-[ext_resource type="Texture2D" path="res://assets/backgrounds/forest_treeline.png" id="4_forest"]
-[ext_resource type="Texture2D" path="res://assets/backgrounds/ground_iso.png" id="5_ground"]
-[ext_resource type="Shader" path="res://shaders/ground_iso.gdshader" id="6_shader"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/fg_trees_left.png" id="4_fg_left"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/fg_trees_right.png" id="5_fg_right"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/forest_treeline.png" id="6_forest"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/ground_iso.png" id="7_ground"]
+[ext_resource type="Shader" path="res://shaders/ground_iso.gdshader" id="8_shader"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ground"]
 resource_local_to_scene = true
-shader = ExtResource("6_shader")
-shader_parameter/ground_tex = ExtResource("5_ground")
+shader = ExtResource("8_shader")
+shader_parameter/ground_tex = ExtResource("7_ground")
 shader_parameter/scroll = Vector2(0, 0)
 shader_parameter/horizon = 0.38
 shader_parameter/perspective_strength = 0.68
@@ -21,7 +23,7 @@ shader_parameter/discovery_center = Vector2(0.5, 0.5)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]
 resource_local_to_scene = true
-shader = ExtResource("6_shader")
+shader = ExtResource("8_shader")
 shader_parameter/ground_tex = ExtResource("2_sky")
 shader_parameter/scroll = Vector2(0, 0)
 shader_parameter/horizon = 0.0
@@ -36,9 +38,9 @@ y_sort_enabled = false
 [node name="Parallax" type="Node2D" parent="."]
 
 [node name="SkyMountains" type="TextureRect" parent="Parallax"]
-offset_left = -320.0
+offset_left = -960.0
 offset_top = -200.0
-offset_right = 320.0
+offset_right = 960.0
 offset_bottom = 56.0
 texture = ExtResource("2_sky")
 expand_mode = 1
@@ -48,9 +50,9 @@ texture_repeat = 2
 mouse_filter = 2
 
 [node name="Clouds" type="TextureRect" parent="Parallax"]
-offset_left = -512.0
+offset_left = -448.0
 offset_top = -160.0
-offset_right = 512.0
+offset_right = 448.0
 offset_bottom = -96.0
 texture = ExtResource("3_cloud")
 expand_mode = 1
@@ -61,11 +63,35 @@ mouse_filter = 2
 modulate = Color(1, 1, 1, 0.85)
 
 [node name="Forest" type="TextureRect" parent="Parallax"]
-offset_left = -512.0
+offset_left = -576.0
 offset_top = -48.0
-offset_right = 512.0
+offset_right = 576.0
 offset_bottom = 80.0
-texture = ExtResource("4_forest")
+texture = ExtResource("6_forest")
+expand_mode = 1
+stretch_mode = 0
+texture_filter = 0
+texture_repeat = 2
+mouse_filter = 2
+
+[node name="FG_Trees_Left" type="TextureRect" parent="Parallax"]
+offset_left = -1500.0
+offset_top = -180.0
+offset_right = 1500.0
+offset_bottom = 180.0
+texture = ExtResource("4_fg_left")
+expand_mode = 1
+stretch_mode = 0
+texture_filter = 0
+texture_repeat = 2
+mouse_filter = 2
+
+[node name="FG_Trees_Right" type="TextureRect" parent="Parallax"]
+offset_left = -1340.0
+offset_top = -180.0
+offset_right = 1660.0
+offset_bottom = 180.0
+texture = ExtResource("5_fg_right")
 expand_mode = 1
 stretch_mode = 0
 texture_filter = 0

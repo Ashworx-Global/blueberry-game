@@ -3,14 +3,21 @@
 
 # Godot generated
 .godot/
+.mono/
 export/
 export_presets.cfg
+data_*/
 *.tmp
+*.log
 *.translation
 
-# Godot 4: keep .import but ignore imported data if you prefer
-# *.import   # uncomment to ignore imports (not recommended — UIDs live in .import)
-# .import/
+# Godot 4: keep *.import (UIDs live in them). Imported pixel/shader
+# cache lives under .godot/ and is already ignored above.
+
+# Export binaries (if exporting outside export/)
+*.pck
+*.apk
+*.aab
 
 # OS
 .DS_Store

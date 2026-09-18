@@ -6,11 +6,11 @@ Pixel-art **Beat 'em Up / Belt-Scroll Brawler** (Golden Axe-like). Rabbit hero h
 
 | Task | Command |
 |------|---------|
-| Play | `C:\Dev\Gadot\Godot_v4.7.2-stable_win64.exe --path C:\Dev\BlueBerry` or VS Code → `Blue Berry: Launch Project (F5)` |
-| Editor | `C:\Dev\Gadot\Godot_v4.7.2-stable_win64.exe --path C:\Dev\BlueBerry -e` |
-| Headless Verify | `C:\Dev\Gadot\Godot_v4.7.2-stable_win64_console.exe --headless --path C:\Dev\BlueBerry --quit --verbose 2>&1 \| Select-String WARNING` — expect 0 |
+| Play | `godot --path <repo>` or VS Code → `Blue Berry: Launch Project (F5)` |
+| Editor | `godot --path <repo> -e` |
+| Headless Verify | `godot --headless --path <repo> --quit --verbose`, filter `WARNING` — expect 0 (per-OS paths in `MEMORY.md` §1) |
 
-1. Open `C:\Dev\BlueBerry` as folder in VS Code (uses `.vscode/settings.json:4` `godotTools.editorPath.godot4`).
+1. Open the repo root as folder in VS Code (uses `.vscode/settings.json` `godotTools.editorPath.godot4`).
 2. Press **F5** → splash `BLUE BERRY` → **SPACE** or **START** → play.
 
 ## Controls
@@ -70,7 +70,7 @@ BlueBerry/
 
 ## Git
 
-- **First clone:** `git clone <url> BlueBerry` → `Gadot\Godot... --path BlueBerry --import` → `git log --oneline`.
+- **First clone:** `git clone <url> BlueBerry` → `godot --headless --path BlueBerry --import` (per-OS paths in `MEMORY.md` §1) → `git log --oneline`.
 - **Branching:** `main` is playable shell (`v0.2`); feature branches `feat/<name>`; commit `SPEC.md` + `MEMORY.md` with every mechanic change.
 - **Ignore:** `.godot/` + `export/` + `*.tmp` (keep `*.import` for UID stability) — see `.gitignore`.
 

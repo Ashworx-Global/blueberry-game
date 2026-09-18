@@ -31,7 +31,7 @@
 - [ ] **Balance:** Tune `DAMAGE 1` vs `HP3` (3 hits) vs `hop iframes 0.22` — ensure swarm not impossible.
 
 ### Sprint 3 — World & Flow (2–3 days)
-- [ ] **Parallax BG:** `ParallaxBackground` forest `0.2/0.5` layers behind `Ground`, `TileMapLayer` grass/trees using `assets/tiles/`.
+- [x] **Parallax forest base (2026-09-18):** procedural tileable set (`bg_distant 1280`, `forest 512`, `ground 256`, `fg 320` RGBA) wired in `Background.tscn`/`background.gd` with period-correct centered wrap for the 2400px arena. Hand-tweak in Clip Studio per `parallax_spec.md` §10.
 - [ ] **Arena TileMap:** Replace `Ground ColorRect` with `TileMapLayer` `TileSet 16×16` `physics layer` walls same `Walls` pos; keep `y_sort`.
 - [ ] **Juice:** `StartScreen` intro tween already; add `GameOver` shake, `HUD` hearts pop `scale 1.2→1.0`.
 - [ ] **Pause menu:** `scenes/PauseMenu.tscn` `CanvasLayer ALWAYS` `Esc → paused toggle` `Resume/Quit`.
@@ -60,7 +60,7 @@
 
 ## How to Pick Up
 
-1. `git pull` → `Gadot --headless --path . --import` → `Godot --headless --quit --verbose | Select-String WARNING`.
+1. `git pull` → `godot --headless --path . --import` → `godot --headless --path . --quit --verbose`, filter `WARNING` (per-OS paths in `MEMORY.md` §1).
 2. Check `MEMORY.md:2` boot flow; edit `.tscn` with `load_steps = ext+sub` ordering.
 3. For hop/attack tuning: `player.gd:10` `hop_*` `attack_*`, `Main.tscn` Hitbox offset.
 4. For UI: `StartScreen.tscn` `Center/VBox` `GameOverScreen.tscn` `HBox` `ALWAYS`.

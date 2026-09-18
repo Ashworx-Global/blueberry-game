@@ -144,7 +144,7 @@ BlueBerry/
 ```
 
 ## 9. How to Run
-1. Open `C:\Dev\BlueBerry\project.godot` in Godot 4.7.
+1. Open `project.godot` (repo root) in Godot 4.7.
 2. Press F5 (Main is `scenes/Main.tscn`).
 3. Arrows/WASD move, Space hop, X/Z attack.
 

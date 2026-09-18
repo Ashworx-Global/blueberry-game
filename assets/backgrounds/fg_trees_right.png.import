@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dqq7n4a07olqk"
-path="res://.godot/imported/forest_treeline.png-5760d667cfcc16efca97623196c87c03.ctex"
+uid="uid://i1cwo0c18c2v"
+path="res://.godot/imported/fg_trees_right.png-b9c8deef860756c7217264834107cf77.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/backgrounds/forest_treeline.png"
-dest_files=["res://.godot/imported/forest_treeline.png-5760d667cfcc16efca97623196c87c03.ctex"]
+source_file="res://assets/backgrounds/fg_trees_right.png"
+dest_files=["res://.godot/imported/fg_trees_right.png-b9c8deef860756c7217264834107cf77.ctex"]
 
 [params]
 

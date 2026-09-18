@@ -6,17 +6,22 @@
 
 ## 1. How to Run
 
+`<repo>` = repo root (`project.godot` lives there). Use `--path <repo>` (or `--path .` from the repo root). Do NOT open the parent folder as project.
+
 | Task | Command |
 |------|---------|
-| Play | `C:\Dev\Gadot\Godot_v4.7.2-stable_win64.exe --path C:\Dev\BlueBerry` or VS Code → `Blue Berry: Launch Project (F5)` |
-| Editor | `C:\Dev\Gadot\Godot_v4.7.2-stable_win64.exe --path C:\Dev\BlueBerry -e` |
-| Headless import | `C:\Dev\Gadot\Godot_v4.7.2-stable_win64_console.exe --headless --path C:\Dev\BlueBerry --import` |
-| Verify (no warnings) | `C:\Dev\Gadot\Godot_v4.7.2-stable_win64_console.exe --headless --path C:\Dev\BlueBerry --quit --verbose 2>&1 \| Select-String WARNING\|ERROR` |
-| Check only | `C:\Dev\Gadot\Godot_v4.7.2-stable_win64_console.exe --headless --path C:\Dev\BlueBerry --check-only` |
+| Play | `godot --path <repo>` or VS Code → `Blue Berry: Launch Project (F5)` |
+| Editor | `godot --path <repo> -e` |
+| Headless import | `godot --headless --path <repo> --import` |
+| Verify (no warnings) | `godot --headless --path <repo> --quit --verbose` then filter `WARNING\|ERROR` (`Select-String` on PowerShell, `grep` on macOS/Linux) |
+| Check only | `godot --headless --path <repo> --check-only` |
+
+- **Windows example exe:** `C:\Dev\Gadot\Godot_v4.7.2-stable_win64_console.exe` (use the `_console` build for headless output).
+- **macOS example exe:** `/Applications/Godot.app/Contents/MacOS/Godot`.
 
 - **Entry:** `project.godot:9` `run/main_scene="res://scenes/Main.tscn"` (`uid://b1ueb3rry_main`) — `Main` `Node2D` owns `StartScreen`/`GameOverScreen` via `CanvasLayer`. Do NOT open parent folder as project.
 - **Renderer:** `GL Compatibility` (`project.godot:18`) `textures/canvas_textures/default_texture_filter=0` nearest, `viewport 640×360 → window 1280×720`, `canvas_items` stretch.
-- **VS Code:** `.vscode/settings.json:4` `godotTools.editorPath.godot4` → Gadot exe, `launch.json:5` type `godot` `port 6007`, `tasks.json:5` headless check. Requires `geequlim.godot-tools 2.7.1`.
+- **VS Code:** `.vscode/settings.json:4` `godotTools.editorPath.godot4` → local Godot exe (see §1), `launch.json:5` type `godot` `port 6007`, `tasks.json:5` headless check. Requires `geequlim.godot-tools 2.7.1`.
 - After adding/replacing art (`assets/sprites/rabbit.png`, `assets/sfx/`), always run `--import` then verify `*.import` UIDs still match `ext_resource` in `.tscn`.
 
 ## 2. Boot Flow (frame 0)
@@ -60,16 +65,21 @@
 | `scripts/enemy.gd` | — | `detection 220 lose 320 attack 22` |
 | `scripts/start_screen.gd` | — | `signal start_game` `ALWAYS` |
 | `scripts/game_over_screen.gd` | — | `signals restart/menu` `ALWAYS` |
+| `scenes/Background.tscn` | `uid://b1ueb3rry_bg` | parallax layers + ground shader mount |
+| `scripts/background.gd` | — | period wrap (`SKY 1280/CLOUD 256/FOREST 512`), pinned FG strips |
+| `assets/backgrounds/*.png` | — | tileable forest set; edit rules `parallax_spec.md` §10 |
 | `icon.svg` | — | `project.godot:11` + StartScreen Icon |
 
-Verify: `Get-ChildItem *.import | Select-String uid` vs `ext_resource` in `.tscn`.
+Verify: UID strings in `*.import` vs `ext_resource` in `.tscn` (`Select-String uid` on PowerShell, `grep -h uid *.import` on macOS/Linux).
 
 ## 5. Art Pipeline
 
+- **Background layers (procedural bases, 2026-09-18):** `bg_distant_treeline 1280` (period 1280) → `clouds 256` (period 256) → `forest_treeline 512` (period 512) → near trees `fg_trees_left/right 320` tiled across 3000px world bands (factor 0.7, player walks past) → ground shader tile `ground_iso 256` (periods 256 x+y). Scroll rects are `viewport 640 + one period` wide; `background.gd` wraps drift centered via `_centered_wrap()` — never `fposmod(cam*f, rect.size.x)`, it gaps on the long arena; never pin FG strips to the camera, they read as attached to the player.
 - **Placeholders:** `Player`/`Enemy` use `AnimatedSprite2D` + empty `SpriteFrames` `idle/run/hop/attack/hurt` + `ColorRect` bodies (pink rabbit `0.99,0.72,0.88` ears, green enemy `0.35,0.72,0.35`). Attack/Hit debug `ColorRect` hidden.
 - **Swap:** Import `assets/sprites/rabbit.png` `Filter Nearest Mipmap Off`, edit `Player.tscn:AnimatedSprite2D SpriteFrames` add frames, keep names. Hitbox `28×18` at `16,-10` may need retune if sprite wider.
 - **After art:** `Godot --import` → `.godot/imported/*.ctex` + `*.import` updated. Do NOT edit `*.import` hash manually.
 - **Never commit** `.godot/` (`*.ctex/*.md5`) — in `.gitignore`.
+- **Hand-edits:** Clip Studio source `assets/backgrounds/blueberry_backgound.clip`; seamless-edge + export rules in `parallax_spec.md` §10.
 
 ## 6. Physics Layers Cheat Sheet
 
@@ -103,20 +113,20 @@ Masks must overlap: `player_attack 4 → enemy_hurtbox 8`, `enemy_attack 16 → 
 
 - `AnimatedSprite2D SpriteFrames` empty — needs `rabbit.png` sheet (`idle/run/hop/attack/hurt`).
 - `default_env.tres` solid color only — add `WorldEnvironment` fog/parallax later.
-- `assets/sprites/` + `assets/sfx/` empty — add `blueberry_pickup.tscn`, `parallax BG`.
+- `assets/sprites/` + `assets/sfx/` empty — add `blueberry_pickup.tscn`, rabbit sheet (`backgrounds/` forest set is done, see §5).
 - `CanvasLayer/HUD/InfoLabel` only during PLAYING — splash controls hint duplicated.
 - `.godot/` cache ignored — first clone needs `Godot --import`.
 
 ## 9. Conventions for Contributors & Agents
 
-- **Project root = repo root** (`project.godot` at `C:\Dev\BlueBerry\project.godot`); always `--path C:\Dev\BlueBerry`.
+- **Project root = repo root** (`project.godot` at repo root); always `--path <repo>` (see §1 for per-OS executable paths).
 - GDScript `snake_case` vars/funcs, `PascalCase` nodes, lowercase groups (`"player"`/`"enemy"`), `@onready get_node` + null guards.
 - One script per scene; signals (`start_game`, `restart_game`, `died`, `health_changed`) over direct tree walks.
 - `.tscn` ordering strict: `gd_scene → ext_resource → sub_resource → node`; `load_steps = count`.
 - Never `monitoring=false` then `get_overlapping_bodies()` same frame — use `set_deferred` or query before disable.
 - Use `PROCESS_MODE_ALWAYS` for UI that must work while gameplay frozen (splash/gameover); `DISABLED` to freeze Player during START.
-- Verify via `Godot --headless --quit 2>&1 | Select-String WARNING` before commit.
+- Verify via headless `--quit` output filtered for `WARNING` before commit (see §1).
 
 ---
 
-*Generated from live audit of `C:\Dev\BlueBerry` on 2026-08-28. Update when `SPEC.md` or hierarchy changes.*
+*Runbook from live audit on 2026-08-28 (unified for all agents 2026-09-18). Update when `SPEC.md` or hierarchy changes.*

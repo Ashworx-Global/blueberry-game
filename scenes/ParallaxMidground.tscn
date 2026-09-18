@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://b1ueb3rry_mg"]
+
+[ext_resource type="Texture2D" path="res://assets/backgrounds/forest_treeline.png" id="1_forest"]
+
+[node name="ParallaxMidground" type="Node2D"]
+
+[node name="Forest_Trees" type="TextureRect" parent="."]
+offset_left = -512.0
+offset_top = -48.0
+offset_right = 512.0
+offset_bottom = 80.0
+texture = ExtResource("1_forest")
+expand_mode = 1
+stretch_mode = 0
+texture_filter = 0
+texture_repeat = 2
+mouse_filter = 2

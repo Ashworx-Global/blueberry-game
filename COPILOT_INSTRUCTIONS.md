@@ -6,7 +6,7 @@
 - **Code Spell Checker** — optional
 
 ### Project Context
-- **Project root = repo root**: `C:\Dev\BlueBerry\project.godot` (entry `res://scenes/Main.tscn`). Always `--path C:\Dev\BlueBerry`.
+- **Project root = repo root**: `project.godot` at repo root (entry `res://scenes/Main.tscn`). Always `--path <repo>` (`--path .` from repo root); per-OS executable paths in `MEMORY.md` §1.
 - **Structure**: `scenes/Main.tscn` (Main y_sort + Walls + Enemies + CanvasLayer HUD/Start/GameOver) + `scenes/Player.tscn` + `Enemy.tscn` + `StartScreen/GameOverScreen.tscn` + `scripts/*.gd`. See `SPEC.md` (canonical) + `MEMORY.md` (runbook) + `.opencode/AGENTS.md`.
 - **Conventions**: GDScript `snake_case` vars/funcs, `PascalCase` nodes, lowercase groups `"player"`/`"enemy"`, `@onready` + null guards, one script per scene, signals (`start_game`, `died`, `health_changed`) over direct tree walks.
 
@@ -27,7 +27,7 @@ func _start_hop(input_vec: Vector2) -> void:
 ### Tips
 - Mention `Main.GameState START/PLAYING/GAME_OVER` flow when adding features.
 - For art, keep `SpriteFrames` names `idle/run/hop/attack/hurt` and `Nearest` filter.
-- Verify: `Gadot --headless --path . --import` then `--quit --verbose | Select-String WARNING`.
+- Verify: headless `--import` then `--quit --verbose`, filter `WARNING`/`ERROR` (commands per OS in `MEMORY.md` §1).
 
 ---
 For more, see [Godot Docs](https://docs.godotengine.org/en/4.7) and [Copilot Docs](https://docs.github.com/en/copilot).

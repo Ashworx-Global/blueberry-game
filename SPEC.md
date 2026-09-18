@@ -16,7 +16,7 @@ A pixel-art **Beat 'em Up / Belt-Scroll Brawler** (Golden Axe-like). A rabbit ho
 
 - **Engine:** Godot 4.7.2 stable, GDScript only, `GL Compatibility` renderer (`project.godot:18`).
 - **Entry:** `run/main_scene="res://scenes/Main.tscn"` (`uid://b1ueb3rry_main`) — `Main` owns splash/game-over via `CanvasLayer`.
-- **Source root:** `C:\Dev\BlueBerry\` — run with `Gadot\Godot... --path C:\Dev\BlueBerry` or VS Code `Launch Project (F5)`.
+- **Source root:** repo root (`project.godot` at repo root) — run with `godot --path <repo>` (see `MEMORY.md` §1 for per-OS executable paths) or VS Code `Launch Project (F5)`.
 - **Display:** `viewport 640×360 → window 1280×720 (2×)`, `stretch canvas_items keep`, `default_texture_filter=0 Nearest`, `physics_ticks 60`.
 - **Filtering:** Nearest, `snap_2d_transforms_to_pixel` implied via `canvas_items`.
 
@@ -120,9 +120,9 @@ Main [Node2D] y_sort script=main.gd GameState START/PLAYING/GAME_OVER
 
 ## 8. Run / Debug
 
-- Launch `Gadot --path BlueBerry` → splash → `StartScreen`.
-- VS Code `Launch Project (F5)` type `godot` `port6007` `scene main` `editor_path` `Gadot.exe`.
-- Headless ` --headless --quit --verbose` must show 0 WARNING.
+- Launch `godot --path <repo>` → splash → `StartScreen` (per-OS paths in `MEMORY.md` §1).
+- VS Code `Launch Project (F5)` type `godot` `port 6007`, main scene set in `project.godot`.
+- Headless `--headless --quit --verbose` must show 0 WARNING.
 
 ---
 

@@ -9,12 +9,21 @@ extends Node2D
 @export var auto_speed_x: float = 6.0 # px/s for clouds
 @export var parallax_sky: float = 0.08
 @export var parallax_clouds: float = 0.14
+@export var parallax_foreground: float = 0.7 # near world layer (player walks past it)
 @export var parallax_forest: float = 0.38
 @export var ground_tiling: float = 2.6
 @export var ground_horizon: float = 0.38
+# Scroll-tile periods (px) — MUST match each texture's seamless width.
+# Rects are sized viewport (640) + one period so the centered wrap below
+# never exposes an edge, even on the 2400px-wide arena.
+const SKY_TILE := 1280.0 # bg_distant_treeline.png
+const CLOUD_TILE := 256.0 # clouds.png
+const FOREST_TILE := 512.0 # forest_treeline.png
 
 @onready var sky_rect: TextureRect = $Parallax/SkyMountains
 @onready var clouds_rect: TextureRect = $Parallax/Clouds
+@onready var fg_left_rect: TextureRect = $Parallax/FG_Trees_Left
+@onready var fg_right_rect: TextureRect = $Parallax/FG_Trees_Right
 @onready var forest_rect: TextureRect = $Parallax/Forest
 @onready var ground_rect: ColorRect = $GroundIso
 var ground_mat: ShaderMaterial
@@ -61,17 +70,28 @@ func _process(delta: float) -> void:
 	# follow camera so background always fills viewport on large maps (2400x900)
 	global_position = cam_pos
 
-	# Parallax offsets — continuous wrap via fmod
+	# Parallax offsets — centered wrap around each texture's tile period.
+	# Plain fposmod(cam*f, rect.size.x) opens gaps once the camera roams the
+	# long arena, because drift range exceeds the viewport margin. Centering
+	# the drift in (-period/2, period/2] keeps both edges covered.
 	if sky_rect:
-		sky_rect.position.x = -fposmod(cam_pos.x * parallax_sky, sky_rect.size.x)
+		sky_rect.position.x = _centered_wrap(cam_pos.x * parallax_sky, SKY_TILE)
 		# slight y with horizon
 		sky_rect.position.y = -fposmod(cam_pos.y * 0.03, 8.0)
 	if clouds_rect:
 		_cloud_scroll += delta * auto_speed_x
-		clouds_rect.position.x = -fposmod(cam_pos.x * parallax_clouds + _cloud_scroll, clouds_rect.size.x)
+		clouds_rect.position.x = _centered_wrap(cam_pos.x * parallax_clouds + _cloud_scroll, CLOUD_TILE)
 	if forest_rect:
-		forest_rect.position.x = -fposmod(cam_pos.x * parallax_forest, forest_rect.size.x)
+		forest_rect.position.x = _centered_wrap(cam_pos.x * parallax_forest, FOREST_TILE)
 		forest_rect.position.y = -fposmod(cam_pos.y * 0.06, 6.0)
+	if fg_left_rect:
+		# World-anchored near layer: drifts across the screen at its own rate
+		# so the player walks PAST the trees. (Pinning these to the camera
+		# glued them next to the centered player — looked attached.)
+		# Bands are 3000px wide with 292px+ margins: no wrap needed.
+		fg_left_rect.position.x = -cam_pos.x * parallax_foreground
+	if fg_right_rect:
+		fg_right_rect.position.x = -cam_pos.x * parallax_foreground
 
 	# Ground shader scroll — 1:1 with world plus time drift if discovery
 	if ground_mat:
@@ -84,6 +104,12 @@ func _process(delta: float) -> void:
 		# var screen = player.get_global_transform_with_canvas().origin / vp
 		# ground_mat.set_shader_parameter("discovery_center", screen)
 		ground_mat.set_shader_parameter("discovery_radius", _discovery_strength)
+
+# Drift wrapped into (-period/2, period/2] so a rect of width
+# viewport + period always covers the viewport on both sides.
+func _centered_wrap(drift: float, period: float) -> float:
+	return period * 0.5 - fposmod(drift + period * 0.5, period)
+
 
 func _find_camera() -> Camera2D:
 	if player and player.has_node("Camera2D"):

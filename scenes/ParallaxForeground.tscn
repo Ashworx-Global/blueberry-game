@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3 uid="uid://b1ueb3rry_fg"]
+
+[ext_resource type="Texture2D" path="res://assets/backgrounds/fg_trees_left.png" id="1_fg_left"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/fg_trees_right.png" id="2_fg_right"]
+
+[node name="ParallaxForeground" type="Node2D"]
+z_index = -50
+
+[node name="FG_Trees_Left" type="TextureRect" parent="."]
+offset_left = -320.0
+offset_top = -180.0
+offset_right = 0.0
+offset_bottom = 180.0
+texture = ExtResource("1_fg_left")
+expand_mode = 1
+stretch_mode = 0
+texture_filter = 0
+texture_repeat = 0
+mouse_filter = 2
+
+[node name="FG_Trees_Right" type="TextureRect" parent="."]
+offset_left = 0.0
+offset_top = -180.0
+offset_right = 320.0
+offset_bottom = 180.0
+texture = ExtResource("2_fg_right")
+expand_mode = 1
+stretch_mode = 0
+texture_filter = 0
+texture_repeat = 0
+mouse_filter = 2
