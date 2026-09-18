@@ -6,7 +6,7 @@
 
 ## Current State (v0.2 Playable Loop)
 
-- **Loop:** `StartScreen (dim 0.92, ALWAYS) 640×360` → `Main 2400×900 arena y_sort` → `Player 5HP 130 hop 64/0.28 i-frame 0.22 (clears layer-32 obstacles)` `WASD/Arrows + Space hop + X/Z attack 28×18 hitstop` → `Enemy chase 68 detection 220 lose 320 attack 22 sep` `HP3` → `Spawner 2 + every 2.2s max6 ring` → `HUD ♥/Wave/Kills` → `GameOverScreen pop → SPACE/R → reload → Start`.
+- **Loop:** `StartScreen (dim 0.92, ALWAYS) 640×360` → `Main 2400×900 arena y_sort` → `Player 5HP 130 hop 64/0.28 i-frame 0.22 (clears layer-32 obstacles)` `WASD/Arrows + Space hop + X/Z attack 10×6.5 hitstop` → `Enemy chase 68 detection 220 lose 320 attack 22 sep` `HP3` → `Spawner 2 + every 2.2s max6 ring` → `HUD ♥/Wave/Kills` → `GameOverScreen pop → SPACE/R → reload → Start`.
 - **Tech:** `load_steps` strict ordering, `set_deferred` for monitoring, `anim_name` fix, `60.0` float division, `_margin` ignore, `mouse_filter IGNORE` on BG, `ALWAYS` for UI, no `paused` freeze (DISABLED player).
 - ** debt:** `SpriteFrames` placeholders on Enemy only (player wired to `blueberry_1.png`), `assets/sfx/` empty, `default_env` solid.
 - **Done since v0.2:** arena `800×400→2400×900`, jump-over obstacles (crate/rock/log + KipperFalcon forest rocks/trees, layer 32), player art wired, tileable forest parallax with period-correct wrap.

@@ -17,7 +17,7 @@ Pixel-art **Beat 'em Up / Belt-Scroll Brawler** (Golden Axe-like). Rabbit hero h
 
 - **Move:** Arrow Keys + WASD (8-dir normalized, `130 px/s`)
 - **Hop / Dodge:** `Space` — i-frames `0.22s`, `64px`, `cooldown 0.45s` (`player.gd:10`)
-- **Mob Attack:** `X` or `Z` — `28×18` front swipe, hitstop `0.05s`
+- **Mob Attack:** `X` or `Z` — `10×6.5` front swipe, hitstop `0.05s`
 - **Game Over:** `SPACE`/`R` → Restart (reload) • `ESC` → Menu (splash) • `ESC` in game → Quit
 
 ## What’s Built (v0.2)

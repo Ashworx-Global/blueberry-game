@@ -81,7 +81,6 @@ When creating commits on this machine, use the local opencode skill at:
 `$HOME/.config/opencode/skills/gpg-signed-commits/SKILL.md`
 
 Rules from that skill:
-
 - Never create an unsigned commit.
 - Resolve the wrapper with `WRAPPER="$HOME/.config/opencode/skills/gpg-signed-commits/gpg-with-passphrase.sh"`.
 - Ensure the wrapper is configured as `gpg.program`.
@@ -90,6 +89,7 @@ Rules from that skill:
 - Verify after committing with `git log -1 --show-signature`.
 - Never print, echo, log, or store the GPG passphrase or `$GPG` value.
 - If signing fails, ask the user rather than falling back to an unsigned commit.
+- `main` is protected (signed commits, no force-push/deletion): work on `feat/*` branches and merge via PR, never push directly to `main`.
 
 ## Documentation Policy
 

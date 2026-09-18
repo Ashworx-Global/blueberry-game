@@ -60,7 +60,7 @@ Kill → score + `kills%6 → wave++`, `kills%8 → wave++` (spawner ramp, futur
 
 | Node | Type | Layer | Mask | Shape |
 |------|------|-------|------|-------|
-| `CollisionShape2D` | Body | — | — | `14×20` |
+| `CollisionShape2D` | Body | — | — | `5×7` |
 | `Hurtbox` | Area2D `player_hurtbox` | 2 | 16 | `5×7` |
 | `AttackHitbox` | Area2D `player_attack` | 4 | 8 | `10×6.5` |
 
@@ -88,7 +88,7 @@ Kill → score + `kills%6 → wave++`, `kills%8 → wave++` (spawner ramp, futur
 
 ```
 Main [Node2D] y_sort script=main.gd GameState START/PLAYING/GAME_OVER
-├── Ground ColorRect -400,-200→400,200 0.188,0.227,0.2 + GroundGrid lines 0.05
+├── Ground ColorRect (hidden legacy, `visible=false`) + GroundGrid lines
 ├── Walls StaticBody Top at horizon (y=-100, 2400×16) / Bottom ±458 / Left-Right ±1208 16×900 — nothing walks above the ridge
 ├── Player instance Player.tscn 0,0
 ├── Obstacles Node2D y_sort (jump-over crate/rock/log + KipperFalcon forest rocks/trees, `Obstacle.tscn`/`obstacle.gd`, layer 32; HOP mask drops to 1 to clear them)

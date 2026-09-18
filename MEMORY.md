@@ -40,7 +40,7 @@
 - **Player** `scripts/player.gd:57` `State {IDLE,RUN,HOP,ATTACK,HURT,DEAD}`:
   - Input `get_vector(move_left/right/up/down)` normalized `*130` → `move_and_slide`, `facing` flips `scale.x` + `AttackHitbox` offset (`_update_facing_visual:161`). Anims `idle/run/hop/attack/hurt` via `_play_anim(anim_name)` (fixed shadowing `name→anim_name:166`).
   - **Hop** `hop:170` `dir = input or facing`, `state HOP`, `hop_timer 0.28`, `iframes 0.22`, `velocity = dir*(64/0.28)`, `Hurtbox monitoring=false` deferred, `await 0.22 → monitoring=true`, flicker `int(ticks/60.0)%2`.
-  - **Attack** `attack:193` `state ATTACK` `timer 0.36` (0.08 windup+0.12 active+0.16 recover), `await 0.08 → _set_attack_active(true)` (`AttackHitbox 28×18` at `16,-10` layer4), `await 0.12 → false`, hit list `attack_hit_enemies`, hitstop `time_scale 0.08 0.05s`.
+  - **Attack** `attack:193` `state ATTACK` `timer 0.36` (0.08 windup+0.12 active+0.16 recover), `await 0.08 → _set_attack_active(true)` (`AttackHitbox 10×6.5` at `5.5,-3.5` layer4), `await 0.12 → false`, hit list `attack_hit_enemies`, hitstop `time_scale 0.08 0.05s`.
   - **Damage** `take_damage:212` ignores if `DEAD`/`hurt_iframe`/`hop_iframe`, `health--`, `health_changed`, `state HURT 0.35` `hurt_iframe 0.8` flash tween, knockback `180`; `health<=0 → _die:240` `DEAD` `Hurtbox monitoring=false` deferred `Collision disabled=true` `died`.
 - **Enemy** `scripts/enemy.gd:55` `State {IDLE,CHASE,ATTACK,HURT,DEAD}`:
   - `IDLE` wander `wander_speed 18` `±0.5 y` 70% idle; `_can_see_player:133` `dist<=220` → `CHASE`.
