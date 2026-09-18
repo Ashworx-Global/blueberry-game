@@ -33,6 +33,7 @@ var hurt_iframe_timer: float = 0.0
 
 var hop_dir: Vector2 = Vector2.RIGHT
 var attack_hit_enemies: Array = []  # to ensure one hit per swing
+var _hop_saved_mask: int = 33
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var collision: CollisionShape2D = $CollisionShape2D
@@ -82,10 +83,17 @@ func _physics_process(delta: float) -> void:
 			sprite.visible = true
 			if hop_iframe_timer > 0.0:
 				sprite.visible = int(Time.get_ticks_msec() / 60.0) % 2 == 0
+			# visual hop arc — rise and fall
+			var hop_progress: float = 1.0 - (hop_timer / hop_duration)
+			var hop_height: float = 14.0 * sin(hop_progress * PI) # 90s hop arc
+			sprite.position.y = -18.0 - hop_height
 			if hop_timer <= 0.0:
 				velocity = velocity * 0.2  # retain slight momentum
 				state = State.IDLE
 				sprite.visible = true
+				sprite.position.y = -18.0
+				# restore obstacle collision (re-enable jumping)
+				collision_mask = _hop_saved_mask
 				_update_facing_visual()
 				_play_anim("idle")
 			return
@@ -179,6 +187,9 @@ func _start_hop(input_vec: Vector2) -> void:
 	hop_cooldown_timer = hop_cooldown + hop_duration
 	velocity = hop_dir * (hop_distance / hop_duration)
 	_play_anim("hop")
+	# allow jump over obstacles: temporarily ignore obstacle layer (32) keep walls (1)
+	_hop_saved_mask = collision_mask
+	collision_mask = 1
 	# hurtbox invulnerability (deferred to avoid flush error)
 	hurtbox.set_deferred("monitoring", false)
 	# re-enable after iframes via timer check in process
@@ -209,10 +220,18 @@ func _set_attack_active(active: bool) -> void:
 	attack_shape.set_deferred("disabled", not active)
 	attack_hitbox.visible = active  # debug visual if needed
 
+func _restore_hop_collision() -> void:
+	if collision_mask != _hop_saved_mask:
+		collision_mask = _hop_saved_mask
+	sprite.position.y = -18.0
+
 func take_damage(amount: int, from_pos: Vector2) -> void:
 	if state == State.DEAD: return
 	if hurt_iframe_timer > 0.0: return
 	if hop_iframe_timer > 0.0: return
+	# if hopping, restore obstacle collision before hurt
+	if state == State.HOP:
+		_restore_hop_collision()
 
 	health -= amount
 	health = max(health, 0)
@@ -239,6 +258,7 @@ func take_damage(amount: int, from_pos: Vector2) -> void:
 
 func _die() -> void:
 	state = State.DEAD
+	_restore_hop_collision()
 	_play_anim("hurt")
 	velocity = Vector2.ZERO
 	hurtbox.set_deferred("monitoring", false)

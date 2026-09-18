@@ -58,6 +58,9 @@ func _process(delta: float) -> void:
 		var cam2: Camera2D = get_node("../Player/Camera2D")
 		cam_pos = cam2.global_position
 
+	# follow camera so background always fills viewport on large maps (2400x900)
+	global_position = cam_pos
+
 	# Parallax offsets — continuous wrap via fmod
 	if sky_rect:
 		sky_rect.position.x = -fposmod(cam_pos.x * parallax_sky, sky_rect.size.x)

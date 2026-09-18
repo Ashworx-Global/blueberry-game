@@ -5,7 +5,7 @@ enum GameState { START, PLAYING, GAME_OVER }
 
 @export var max_enemies: int = 6
 @export var spawn_interval: float = 2.2
-@export var arena_size: Vector2 = Vector2(800, 400)
+@export var arena_size: Vector2 = Vector2(2400, 900)
 
 @onready var enemies: Node2D = $Enemies
 @onready var spawn_timer: Timer = $SpawnTimer
@@ -22,6 +22,10 @@ var wave: int = 1
 var kills: int = 0
 var current_state: GameState = GameState.START
 var enemy_scene: PackedScene = preload("res://scenes/Enemy.tscn")
+var obstacle_scene: PackedScene = preload("res://scenes/Obstacle.tscn")
+
+@export var obstacle_count: int = 14
+@onready var obstacles: Node2D = $Obstacles
 
 func _ready() -> void:
 	y_sort_enabled = true
@@ -64,6 +68,10 @@ func show_start_screen() -> void:
 	# clear any leftover enemies (important after menu without reload)
 	for child in enemies.get_children():
 		child.queue_free()
+	# clear obstacles preview (will respawn on start)
+	if obstacles:
+		for child in obstacles.get_children():
+			child.queue_free()
 	if hud:
 		hud.visible = false
 	if start_screen:
@@ -124,6 +132,10 @@ func start_game() -> void:
 	kills = 0
 	for child in enemies.get_children():
 		child.queue_free()
+	if obstacles:
+		for child in obstacles.get_children():
+			child.queue_free()
+		_spawn_obstacles()
 	# spawn initial wave
 	for _i in 2:
 		_spawn_enemy()
@@ -197,6 +209,35 @@ func _spawn_enemy() -> void:
 	if e.has_signal("died"):
 		e.died.connect(func(): _on_enemy_died())
 
+func _spawn_obstacles() -> void:
+	if obstacles == null or obstacle_scene == null:
+		return
+	var attempts := 0
+	var spawned := 0
+	while spawned < obstacle_count and attempts < 120:
+		attempts += 1
+		var x := randf_range(-arena_size.x * 0.46, arena_size.x * 0.46)
+		var y := randf_range(-arena_size.y * 0.42, arena_size.y * 0.42)
+		var pos := Vector2(x, y)
+		# keep start area clear for fair begin
+		if pos.distance_to(Vector2.ZERO) < 140.0:
+			continue
+		# keep away from walls
+		if absf(pos.x) > arena_size.x * 0.5 - 48 or absf(pos.y) > arena_size.y * 0.5 - 24:
+			continue
+		var too_close := false
+		for c in obstacles.get_children():
+			if c.global_position.distance_to(pos) < 90.0:
+				too_close = true
+				break
+		if too_close:
+			continue
+		var o: Node2D = obstacle_scene.instantiate() as Node2D
+		o.global_position = pos
+		obstacles.add_child(o)
+		spawned += 1
+	# if we spawned fewer due to constraints, it's okay
+
 func _on_enemy_died() -> void:
 	if current_state != GameState.PLAYING:
 		return
@@ -235,7 +276,7 @@ func _update_hud() -> void:
 		elif current_state == GameState.GAME_OVER:
 			hud_wave.text = "DEAD — Wave %d  Kills %d" % [wave, kills]
 	if hud_info and current_state == GameState.PLAYING:
-		hud_info.text = "Arrows/WASD move  •  SPACE hop (i-frame)  •  X/Z attack  •  R restart"
+		hud_info.text = "Arrows/WASD move  •  SPACE hop/jump over crates  •  X/Z attack  •  R restart"
 
 func _draw() -> void:
 	if player and current_state == GameState.PLAYING:
