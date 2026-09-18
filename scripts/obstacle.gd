@@ -4,7 +4,7 @@ extends StaticBody2D
 # Visual picks random type; collision sized to base. y_sort via parent Main y_sort.
 # Discovery hook: obstacles stay static, future map reveal can modulate.
 
-@export var type: String = "random" # crate | rock | log | random
+@export var type: String = "random" # crate | rock | log | forest_* | random
 @export var allow_random: bool = true
 
 @onready var sprite: Sprite2D = $Sprite2D
@@ -13,6 +13,20 @@ extends StaticBody2D
 
 var _picked: String = ""
 
+const RANDOM_TYPES := [
+	"crate",
+	"rock",
+	"log",
+	"forest_rock_1",
+	"forest_rock_2",
+	"forest_rock_3",
+	"forest_tree_1",
+	"forest_tree_2",
+	"forest_tree_3",
+	"forest_dead_tree_2",
+	"forest_dead_tree_3",
+]
+
 func _ready() -> void:
 	add_to_group("obstacle")
 	collision_layer = 32 # obstacle layer (bit 6)
@@ -20,8 +34,7 @@ func _ready() -> void:
 	# y_sort: top of sprite is higher than base, but collision at base controls sorting via y
 	# parent Main has y_sort_enabled true, so this node's y decides draw order
 	if type == "random" and allow_random:
-		var r := randi() % 3
-		_picked = ["crate", "rock", "log"][r]
+		_picked = RANDOM_TYPES[randi() % RANDOM_TYPES.size()]
 	else:
 		_picked = type
 	_apply_type(_picked)
@@ -43,6 +56,38 @@ func _apply_type(t: String) -> void:
 			tex = load("res://assets/sprites/log.png") as Texture2D
 			col_size = Vector2(52, 8)
 			sprite_offset = Vector2(0, -2)
+		"forest_rock_1":
+			tex = load("res://assets/environment/kipper_falcon/isometric_forest/rocks/rock_1.png") as Texture2D
+			col_size = Vector2(40, 12)
+			sprite_offset = Vector2(0, -7)
+		"forest_rock_2":
+			tex = load("res://assets/environment/kipper_falcon/isometric_forest/rocks/rock_2.png") as Texture2D
+			col_size = Vector2(40, 12)
+			sprite_offset = Vector2(0, -7)
+		"forest_rock_3":
+			tex = load("res://assets/environment/kipper_falcon/isometric_forest/rocks/rock_3.png") as Texture2D
+			col_size = Vector2(28, 10)
+			sprite_offset = Vector2(0, -5)
+		"forest_tree_1":
+			tex = load("res://assets/environment/kipper_falcon/isometric_forest/trees/tree_1.png") as Texture2D
+			col_size = Vector2(28, 12)
+			sprite_offset = Vector2(0, -34)
+		"forest_tree_2":
+			tex = load("res://assets/environment/kipper_falcon/isometric_forest/trees/tree_2.png") as Texture2D
+			col_size = Vector2(34, 12)
+			sprite_offset = Vector2(0, -30)
+		"forest_tree_3":
+			tex = load("res://assets/environment/kipper_falcon/isometric_forest/trees/tree_3.png") as Texture2D
+			col_size = Vector2(28, 12)
+			sprite_offset = Vector2(0, -26)
+		"forest_dead_tree_2":
+			tex = load("res://assets/environment/kipper_falcon/isometric_forest/trees/dead_tree_2.png") as Texture2D
+			col_size = Vector2(34, 12)
+			sprite_offset = Vector2(0, -30)
+		"forest_dead_tree_3":
+			tex = load("res://assets/environment/kipper_falcon/isometric_forest/trees/dead_tree_3.png") as Texture2D
+			col_size = Vector2(28, 12)
+			sprite_offset = Vector2(0, -26)
 		_:
 			tex = load("res://assets/sprites/crate.png") as Texture2D
 	if sprite:

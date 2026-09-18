@@ -65,8 +65,9 @@
 | `scripts/enemy.gd` | — | `detection 220 lose 320 attack 22` |
 | `scripts/start_screen.gd` | — | `signal start_game` `ALWAYS` |
 | `scripts/game_over_screen.gd` | — | `signals restart/menu` `ALWAYS` |
-| `scenes/Obstacle.tscn` | — | jump-over crate/rock/log, `obstacle.gd`, layer 32, group `obstacle` |
-| `assets/sprites/crate|rock|log.png` | — | obstacle art, `Nearest`, picked by `obstacle.gd` |
+| `scenes/Obstacle.tscn` | — | jump-over crate/rock/log + forest rocks/trees, `obstacle.gd`, layer 32, group `obstacle` |
+| `assets/sprites/crate|rock|log.png` | — | original obstacle art, `Nearest`, picked by `obstacle.gd` |
+| `assets/environment/kipper_falcon/isometric_forest/` | — | KipperFalcon Godot Store pack runtime PNGs + original `README.txt`; used by forest obstacle variants |
 | `blueberry_1.png` | `uid://ddp8fxr6as2ox` | player `SpriteFrames` source (64×64) |
 | `scenes/Background.tscn` | `uid://b1ueb3rry_bg` | parallax layers + ground shader mount |
 | `scripts/background.gd` | — | period wrap (`SKY 1280/CLOUD 256/FOREST 512`), pinned FG strips |
@@ -80,6 +81,7 @@ Verify: UID strings in `*.import` vs `ext_resource` in `.tscn` (`Select-String u
 - **Background layers (procedural bases, 2026-09-18):** `bg_distant_treeline 1280` (period 1280) → `clouds 256` (period 256) → `forest_treeline 512` (period 512, rect y `-150..-22`, only treetops clear the ridge) → near trees `fg_trees_left/right 640` tiled across 3000px world bands (factor 0.7, single ~150–200px trees with gaps, canopies ON the ridge, thin `0.08` haze + 8px glow) → ground shader tile `ground_iso 256` with **world-fixed horizon** (`horizon 0.115` ≈ world y `-90`; node follows camera X only). Scroll rects are `viewport 640 + one period` wide; `background.gd` wraps drift centered via `_centered_wrap()` — never `fposmod(cam*f, rect.size.x)`, it gaps on the long arena; never pin FG strips to the camera, they read as attached to the player.
 - **Placeholders:** `Enemy` uses `AnimatedSprite2D` + empty `SpriteFrames` + green `ColorRect` body (`0.35,0.72,0.35`). Player art is wired (`blueberry_1.png`, `ColorRect` fallback kept). Attack/Hit debug `ColorRect` hidden.
 - **Swap (enemy next):** Import enemy sheet `Filter Nearest Mipmap Off`, edit `Enemy.tscn:AnimatedSprite2D SpriteFrames` add frames, keep names. Hitboxes `14×18` / `22×14 at 14,-9` may need retune if sprite wider.
+- **Vendor environment art:** `assets/environment/kipper_falcon/isometric_forest/` contains selected runtime PNGs from KipperFalcon's "Isometric Forest Pixel Art 2D" pack. `scripts/obstacle.gd` randomizes forest rocks/trees alongside crate/rock/log. Keep `ASSET_NOTES.md` + original `README.txt`; do not repackage this folder as a standalone asset collection.
 - **After art:** `Godot --import` → `.godot/imported/*.ctex` + `*.import` updated. Do NOT edit `*.import` hash manually.
 - **Never commit** `.godot/` (`*.ctex/*.md5`) — in `.gitignore`.
 - **Hand-edits:** Clip Studio source `assets/backgrounds/blueberry_backgound.clip`; seamless-edge + export rules in `parallax_spec.md` §10.
@@ -117,7 +119,7 @@ Masks must overlap: `player_attack 4 → enemy_hurtbox 8`, `enemy_attack 16 → 
 
 - `AnimatedSprite2D SpriteFrames` for Enemy still empty — needs slime/bug sheet (`idle/run/attack/hurt`).
 - `default_env.tres` solid color only — add `WorldEnvironment` fog/parallax later.
-- `assets/sfx/` empty — add hop/attack/hurt wavs. `assets/sprites/` now holds crate/rock/log + backgrounds forest set is done (see §5).
+- `assets/sfx/` empty — add hop/attack/hurt wavs. `assets/sprites/` now holds crate/rock/log; `assets/environment/kipper_falcon/isometric_forest/` holds imported forest obstacle art; backgrounds forest set is done (see §5).
 - `CanvasLayer/HUD/InfoLabel` only during PLAYING — splash controls hint duplicated.
 - `.godot/` cache ignored — first clone needs `Godot --import`.
 

@@ -90,9 +90,8 @@ Kill → score + `kills%6 → wave++`, `kills%8 → wave++` (spawner ramp, futur
 Main [Node2D] y_sort script=main.gd GameState START/PLAYING/GAME_OVER
 ├── Ground ColorRect -400,-200→400,200 0.188,0.227,0.2 + GroundGrid lines 0.05
 ├── Walls StaticBody Top at horizon (y=-100, 2400×16) / Bottom ±458 / Left-Right ±1208 16×900 — nothing walks above the ridge
-├── Player instance Player.tscn 0,0 (min y ≈ -92 against Top wall)
 ├── Player instance Player.tscn 0,0
-├── Obstacles Node2D y_sort (jump-over crate/rock/log, `Obstacle.tscn`/`obstacle.gd`, layer 32; HOP mask drops to 1 to clear them)
+├── Obstacles Node2D y_sort (jump-over crate/rock/log + KipperFalcon forest rocks/trees, `Obstacle.tscn`/`obstacle.gd`, layer 32; HOP mask drops to 1 to clear them)
 ├── Enemies Node2D y_sort
 ├── SpawnTimer 2.2 one_shot false
 ├── CanvasLayer
@@ -137,6 +136,10 @@ Priority 1: Rabbit sheet, 3-hit combo, blueberry pickup, SFX hitstop, parallax. 
 ## 10. Tuning Checklist
 
 If sluggish → `player.gd:10 move_speed 150`; hop short → `hop_distance 80`; sticky enemy → `attack_cooldown 1.4` or `move_speed 55`; whiff → `AttackHitbox 32×20`.
+
+## 11. Third-Party Assets
+
+- `assets/environment/kipper_falcon/isometric_forest/` — KipperFalcon "Isometric Forest Pixel Art 2D" Godot Store pack. Runtime PNGs are used by `scripts/obstacle.gd` for forest rock/tree variants; `ASSET_NOTES.md` and the original `README.txt` describe source and usage limits. Do not repackage this folder as a standalone asset collection.
 
 ---
 

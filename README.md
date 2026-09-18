@@ -25,7 +25,7 @@ Pixel-art **Beat 'em Up / Belt-Scroll Brawler** (Golden Axe-like). Rabbit hero h
 - `scenes/Player.tscn` + `scripts/player.gd` — `IDLE/RUN/HOP/ATTACK/HURT/DEAD`, hop `set_deferred`, attack `hitstop`, `5 HP` hearts.
 - `scenes/Enemy.tscn` + `scripts/enemy.gd` — `IDLE/CHASE/ATTACK/HURT/DEAD`, `detection 220 lose 320 attack 22`, `sep steer`, `3 HP`, `1.1s` cooldown.
 - `scenes/Main.tscn` + `scripts/main.gd` — `y_sort` `2400×900` arena walls, `Spawner max6 2.2s` ring, `GameState START/PLAYING/GAME_OVER`, HUD `♥/Wave/Kills`.
-- `scenes/Obstacle.tscn` + `scripts/obstacle.gd` — jump-over crate/rock/log (layer 32, hop clears).
+- `scenes/Obstacle.tscn` + `scripts/obstacle.gd` — jump-over crate/rock/log plus imported forest rocks/trees (layer 32, hop clears).
 - `scenes/StartScreen.tscn` + `scripts/start_screen.gd` — `ALWAYS` dim `0.92`, centered `220×44 START`, `SPACE/ENTER` emits `start_game`.
 - `scenes/GameOverScreen.tscn` + `scripts/game_over_screen.gd` — `ALWAYS` pop `Wave • Kills`, `RESTART`/`Menu`, `SPACE/R`.
 - `project.godot` — `640×360 → 1280×720 canvas_items Nearest`, input `hop/attack`.
@@ -64,10 +64,12 @@ BlueBerry/
 ├── COPILOT_INSTRUCTIONS.md .gitignore .gitattributes
 ├── .opencode/AGENTS.md package.json
 ├── .vscode/ settings.json launch.json tasks.json extensions.json
-├── assets/sprites/ assets/sfx/
+├── assets/sprites/ assets/environment/ assets/sfx/
 ├── scenes/Main.tscn Player.tscn Enemy.tscn StartScreen.tscn GameOverScreen.tscn
 └── scripts/main.gd player.gd enemy.gd start_screen.gd game_over_screen.gd
 ```
+
+Third-party art: `assets/environment/kipper_falcon/isometric_forest/` contains selected runtime PNGs from KipperFalcon's Godot Store pack. Keep its `ASSET_NOTES.md` and original `README.txt`; do not repackage it as a standalone asset collection.
 
 ## Git
 
