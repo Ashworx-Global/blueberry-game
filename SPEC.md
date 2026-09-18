@@ -47,12 +47,12 @@ Kill → score + `kills%6 → wave++`, `kills%8 → wave++` (spawner ramp, futur
 
 ## 4. Player — Rabbit (`scenes/Player.tscn` / `scripts/player.gd`)
 
-- **Body:** `CharacterBody2D` `groups=["player"]` `collision layer 0 mask 33` (world 1 + obstacle 32); `CollisionShape2D` `Rect 14×20` at `0,-6`; `AnimatedSprite2D` `pos 0,-12 scale 2×` `texture_filter 0` wired to `blueberry_1.png` `SpriteFrames` (`ColorRect` placeholder body/ears/eyes kept as fallback); `Camera2D` `smoothing 6 drag 0.15`.
+- **Body:** `CharacterBody2D` `groups=["player"]` `collision layer 0 mask 33` (world 1 + obstacle 32); `CollisionShape2D` `Rect 5×7` at `0,0.5` (feet +4); `AnimatedSprite2D` `pos 0,-7 scale 0.35` `texture_filter 0` wired to `blueberry_1.png` `SpriteFrames` (`ColorRect` placeholder body/ears/eyes kept as fallback); `Camera2D` `smoothing 6 drag 0.15`. Sprite scaled 0.35 to sit under the 48–80px KipperFalcon trees.
 - **Exports:** `move_speed 130` `hop_distance 64 hop_duration 0.28 hop_cooldown 0.45 hop_iframes 0.22` `max_health 5 attack_damage 1 attack_cooldown 0.18 hurt_iframe 0.8 hurt_stun 0.35`.
 - **State:** `enum State {IDLE,RUN,HOP,ATTACK,HURT,DEAD}` `health` `facing 1/-1` timers `hop_cooldown/hop/hop_iframe/attack/attack_cooldown/hurt/hurt_iframe` `hop_dir` `attack_hit_enemies`.
 - **Movement:** `get_axis` → normalized `*130` → `move_and_slide`; `RUN/IDLE` anim; `facing` flips `sprite.scale.x` + `AttackHitbox.x`.
 - **Hop:** `_start_hop:170` `dir = input or facing`, `HOP` `hop_timer 0.28` `iframes 0.22` `velocity dir*(64/0.28)` `Hurtbox monitoring=false` deferred `await 0.22 → true`, flicker `ticks/60.0%2`, retain `0.2` velocity. Cooldown `0.45+0.28`. Hop drops body mask to `1`, so the player sails over layer-32 obstacles (see §7).
-- **Attack:** `_start_attack:193` `ATTACK` `timer 0.36` `await 0.08 → active true` `AttackHitbox 28×18 at 16,-10 layer4 mask8` → `await 0.12 → false`, root `0.15` speed, `cooldown 0.18`, one hit per swing `hit_enemies`, hitstop `time_scale 0.08 0.05s` `tween` none.
+- **Attack:** `_start_attack:193` `ATTACK` `timer 0.36` `await 0.08 → active true` `AttackHitbox 10×6.5 at 5.5,-3.5 layer4 mask8` → `await 0.12 → false`, root `0.15` speed, `cooldown 0.18`, one hit per swing `hit_enemies`, hitstop `time_scale 0.08 0.05s` `tween` none.
 - **Damage:** `Hurtbox Area2D layer2 mask16` vs `enemy_attack 16`; `take_damage:212` ignores if `DEAD`/`hurt_iframe`/`hop_iframe`, `health--` `health_changed`, `HURT 0.35 i-frame 0.8` knock `180` flash tween, `_die:240` `DEAD` `Hurtbox false deferred` `Collision true deferred` `died` `modulate 0.6`.
 - **Visual Hook:** `SpriteFrames` `idle/run/hop/attack/hurt` wired from `blueberry_1.png` (64×64) `Nearest` `Mipmaps Off`, names kept. Enemy still uses `ColorRect` placeholder.
 
@@ -61,8 +61,8 @@ Kill → score + `kills%6 → wave++`, `kills%8 → wave++` (spawner ramp, futur
 | Node | Type | Layer | Mask | Shape |
 |------|------|-------|------|-------|
 | `CollisionShape2D` | Body | — | — | `14×20` |
-| `Hurtbox` | Area2D `player_hurtbox` | 2 | 16 | `14×20` |
-| `AttackHitbox` | Area2D `player_attack` | 4 | 8 | `28×18` |
+| `Hurtbox` | Area2D `player_hurtbox` | 2 | 16 | `5×7` |
+| `AttackHitbox` | Area2D `player_attack` | 4 | 8 | `10×6.5` |
 
 ---
 
