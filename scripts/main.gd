@@ -16,6 +16,7 @@ enum GameState { START, PLAYING, GAME_OVER }
 @onready var hud_info: Label = $CanvasLayer/HUD/InfoLabel
 @onready var start_screen: Control = $CanvasLayer/StartScreen
 @onready var game_over_screen: Control = $CanvasLayer/GameOverScreen
+@onready var background: Node2D = $Background
 
 var wave: int = 1
 var kills: int = 0
@@ -42,6 +43,11 @@ func _ready() -> void:
 			game_over_screen.restart_game.connect(_on_restart_game)
 		if game_over_screen.has_signal("menu_game") and not game_over_screen.menu_game.is_connected(_on_menu_game):
 			game_over_screen.menu_game.connect(_on_menu_game)
+
+	# wire background discovery — give it player reference for parallax + future fog/discovery
+	if background and player:
+		if "player" in background:
+			background.player = player
 
 	show_start_screen()
 

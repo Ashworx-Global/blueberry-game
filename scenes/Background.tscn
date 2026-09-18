@@ -1,0 +1,108 @@
+[gd_scene load_steps=8 format=3 uid="uid://b1ueb3rry_bg"]
+
+[ext_resource type="Script" path="res://scripts/background.gd" id="1_bg"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/sky_mountains.png" id="2_sky"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/clouds.png" id="3_cloud"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/forest_treeline.png" id="4_forest"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/ground_iso.png" id="5_ground"]
+[ext_resource type="Shader" path="res://shaders/ground_iso.gdshader" id="6_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ground"]
+resource_local_to_scene = true
+shader = ExtResource("6_shader")
+shader_parameter/ground_tex = ExtResource("5_ground")
+shader_parameter/scroll = Vector2(0, 0)
+shader_parameter/horizon = 0.38
+shader_parameter/perspective_strength = 0.68
+shader_parameter/tiling = 2.6
+shader_parameter/time_scroll_speed = 0.0
+shader_parameter/discovery_radius = 0.0
+shader_parameter/discovery_center = Vector2(0.5, 0.5)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]
+resource_local_to_scene = true
+shader = ExtResource("6_shader")
+shader_parameter/ground_tex = ExtResource("2_sky")
+shader_parameter/scroll = Vector2(0, 0)
+shader_parameter/horizon = 0.0
+shader_parameter/perspective_strength = 0.0
+shader_parameter/tiling = 1.0
+
+[node name="Background" type="Node2D"]
+script = ExtResource("1_bg")
+z_index = -100
+y_sort_enabled = false
+
+[node name="Parallax" type="Node2D" parent="."]
+
+[node name="SkyMountains" type="TextureRect" parent="Parallax"]
+offset_left = -320.0
+offset_top = -200.0
+offset_right = 320.0
+offset_bottom = 56.0
+texture = ExtResource("2_sky")
+expand_mode = 1
+stretch_mode = 0
+texture_filter = 0
+texture_repeat = 2
+mouse_filter = 2
+
+[node name="Clouds" type="TextureRect" parent="Parallax"]
+offset_left = -512.0
+offset_top = -160.0
+offset_right = 512.0
+offset_bottom = -96.0
+texture = ExtResource("3_cloud")
+expand_mode = 1
+stretch_mode = 0
+texture_filter = 0
+texture_repeat = 2
+mouse_filter = 2
+modulate = Color(1, 1, 1, 0.85)
+
+[node name="Forest" type="TextureRect" parent="Parallax"]
+offset_left = -512.0
+offset_top = -48.0
+offset_right = 512.0
+offset_bottom = 80.0
+texture = ExtResource("4_forest")
+expand_mode = 1
+stretch_mode = 0
+texture_filter = 0
+texture_repeat = 2
+mouse_filter = 2
+
+[node name="HorizonGlow" type="ColorRect" parent="Parallax"]
+offset_left = -400.0
+offset_top = 40.0
+offset_right = 400.0
+offset_bottom = 64.0
+color = Color(1, 0.72, 0.42, 0.18)
+mouse_filter = 2
+
+[node name="GroundIso" type="ColorRect" parent="."]
+offset_left = -512.0
+offset_top = -160.0
+offset_right = 512.0
+offset_bottom = 240.0
+color = Color(0.188235, 0.227451, 0.2, 1)
+material = SubResource("ShaderMaterial_ground")
+mouse_filter = 2
+
+[node name="GroundFallback" type="ColorRect" parent="."]
+visible = false
+offset_left = -400.0
+offset_top = -200.0
+offset_right = 400.0
+offset_bottom = 200.0
+color = Color(0.188235, 0.227451, 0.2, 1)
+mouse_filter = 2
+
+[node name="DiscoveryDebug" type="Label" parent="."]
+visible = false
+offset_left = -60.0
+offset_top = -90.0
+offset_right = 60.0
+offset_bottom = -70.0
+text = "discovery: 0"
+horizontal_alignment = 1
