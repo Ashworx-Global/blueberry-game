@@ -16,6 +16,8 @@ Follow `SPEC.md` if any docs conflict, then update stale docs in the same change
 - Treat this as a Godot 4.7.2 GDScript-only project.
 - Keep changes scoped and consistent with the current scene/script layout.
 - Do not commit or edit `.godot/` cache output.
+- When asked to commit, follow the GPG signing skill at `$HOME/.config/opencode/skills/gpg-signed-commits/SKILL.md`: use `git commit -S`, verify with `git log -1 --show-signature`, and never create unsigned commits.
+- `main` is protected (signed commits only, no force-push, no deletion): work on `feat/*` branches and merge via PR; never push directly to `main`.
 - Preserve pixel-art settings: nearest filtering, `640x360` base viewport, GL Compatibility.
 - Keep `.tscn` resource ordering valid: `ext_resource` before `sub_resource` before `node`.
 - Verify with headless Godot import/quit when available.
@@ -23,9 +25,10 @@ Follow `SPEC.md` if any docs conflict, then update stale docs in the same change
 ## Important Files
 
 - `project.godot` — main scene and engine settings.
-- `scenes/Main.tscn` + `scripts/main.gd` — game state, HUD, spawner, start/game-over flow.
-- `scenes/Player.tscn` + `scripts/player.gd` — rabbit controls, hop, attack, health.
+- `scenes/Main.tscn` + `scripts/main.gd` — game state, HUD, spawner, `2400×900` arena, start/game-over flow.
+- `scenes/Player.tscn` + `scripts/player.gd` — rabbit controls, hop (clears obstacles), attack, health; art wired from `blueberry_1.png`.
 - `scenes/Enemy.tscn` + `scripts/enemy.gd` — chaser AI and combat.
+- `scenes/Obstacle.tscn` + `scripts/obstacle.gd` — jump-over crate/rock/log plus KipperFalcon forest rocks/trees, layer 32.
 - `scenes/StartScreen.tscn`, `scenes/GameOverScreen.tscn` — shell flow UI.
 - `scenes/Background.tscn`, `scenes/Parallax*.tscn`, `scripts/background.gd`, `parallax_spec.md` — background/parallax work.
 

@@ -29,7 +29,7 @@ Blue Berry is a Godot 4.7.2 pixel-art beat 'em up / belt-scroll brawler. A rabbi
 - `project.godot` — engine, input map, main scene.
 - `scenes/` — Godot scenes. Keep scene/script ownership clear.
 - `scripts/` — one GDScript per major scene.
-- `assets/` — sprites, backgrounds, future SFX.
+- `assets/` — sprites, backgrounds, environment/vendor art, future SFX.
 - `shaders/` — pixel/palette/ground shaders.
 - `SPEC.md`, `MEMORY.md`, `PLAN.md`, `GDD.md` — project docs.
 - `AGENTS.md` — root AI entry point.
@@ -50,6 +50,7 @@ Blue Berry is a Godot 4.7.2 pixel-art beat 'em up / belt-scroll brawler. A rabbi
   - `4` player attack
   - `8` enemy hurtbox
   - `16` enemy attack
+  - `32` obstacle (StaticBody; player body mask `33` normally, drops to `1` during HOP so hops clear crates/rocks/logs)
 - Preserve the boot loop: `START -> PLAYING -> GAME_OVER -> reload/menu -> START`.
 
 ## Godot Scene Rules
@@ -73,6 +74,23 @@ godot --headless --path . --quit --verbose
 
 Expected result: no parser errors and no new warnings. If Godot is unavailable, state that clearly in the final response.
 
+## Signed Commits
+
+When creating commits on this machine, use the local opencode skill at:
+
+`$HOME/.config/opencode/skills/gpg-signed-commits/SKILL.md`
+
+Rules from that skill:
+- Never create an unsigned commit.
+- Resolve the wrapper with `WRAPPER="$HOME/.config/opencode/skills/gpg-signed-commits/gpg-with-passphrase.sh"`.
+- Ensure the wrapper is configured as `gpg.program`.
+- Use `git commit -S ...` explicitly, even when `commit.gpgsign=true`.
+- For amend/rebase/cherry-pick/merge commits, use the signed equivalents such as `git commit --amend -S --no-edit` and `git rebase --gpg-sign`.
+- Verify after committing with `git log -1 --show-signature`.
+- Never print, echo, log, or store the GPG passphrase or `$GPG` value.
+- If signing fails, ask the user rather than falling back to an unsigned commit.
+- `main` is protected (signed commits, no force-push/deletion): work on `feat/*` branches and merge via PR, never push directly to `main`.
+
 ## Documentation Policy
 
 When changing mechanics, controls, scene hierarchy, collision layers, or asset pipeline:
@@ -85,8 +103,9 @@ When changing mechanics, controls, scene hierarchy, collision layers, or asset p
 
 ## Current Gameplay Contract
 
-- Player: rabbit, `5 HP`, 8-direction movement, hop dodge, front attack, hurt/death states.
+- Player: rabbit, `5 HP`, 8-direction movement, hop dodge (clears layer-32 obstacles), front attack, hurt/death states.
 - Enemy: basic chaser, wander/chase/attack/hurt/dead states.
-- Main: owns start screen, HUD, spawner, game-over flow, and arena.
+- Main: owns start screen, HUD, spawner, game-over flow, and the `2400×900` arena.
+- Obstacles: jump-over crate/rock/log plus KipperFalcon forest rocks/trees (`Obstacle.tscn`/`obstacle.gd`), random type, layer 32.
 - Controls: WASD/arrows move, Space hop, X/Z attack, UI accept for screens.
 - Core feel: readable hitboxes, hop as defense, swarm pressure, crisp pixel presentation.

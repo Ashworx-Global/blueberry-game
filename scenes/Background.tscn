@@ -14,7 +14,7 @@ resource_local_to_scene = true
 shader = ExtResource("8_shader")
 shader_parameter/ground_tex = ExtResource("7_ground")
 shader_parameter/scroll = Vector2(0, 0)
-shader_parameter/horizon = 0.38
+shader_parameter/horizon = 0.115
 shader_parameter/perspective_strength = 0.68
 shader_parameter/tiling = 2.6
 shader_parameter/time_scroll_speed = 0.0
@@ -39,7 +39,7 @@ y_sort_enabled = false
 
 [node name="SkyMountains" type="TextureRect" parent="Parallax"]
 offset_left = -960.0
-offset_top = -200.0
+offset_top = -560.0
 offset_right = 960.0
 offset_bottom = 56.0
 texture = ExtResource("2_sky")
@@ -64,9 +64,9 @@ modulate = Color(1, 1, 1, 0.85)
 
 [node name="Forest" type="TextureRect" parent="Parallax"]
 offset_left = -576.0
-offset_top = -48.0
+offset_top = -150.0
 offset_right = 576.0
-offset_bottom = 80.0
+offset_bottom = -22.0
 texture = ExtResource("6_forest")
 expand_mode = 1
 stretch_mode = 0
@@ -87,9 +87,9 @@ texture_repeat = 2
 mouse_filter = 2
 
 [node name="FG_Trees_Right" type="TextureRect" parent="Parallax"]
-offset_left = -1340.0
+offset_left = -1180.0
 offset_top = -180.0
-offset_right = 1660.0
+offset_right = 1820.0
 offset_bottom = 180.0
 texture = ExtResource("5_fg_right")
 expand_mode = 1
@@ -100,17 +100,17 @@ mouse_filter = 2
 
 [node name="HorizonGlow" type="ColorRect" parent="Parallax"]
 offset_left = -400.0
-offset_top = 40.0
+offset_top = -94.0
 offset_right = 400.0
-offset_bottom = 64.0
-color = Color(1, 0.72, 0.42, 0.18)
+offset_bottom = -86.0
+color = Color(1, 0.72, 0.42, 0.1)
 mouse_filter = 2
 
 [node name="GroundIso" type="ColorRect" parent="."]
 offset_left = -512.0
 offset_top = -160.0
 offset_right = 512.0
-offset_bottom = 240.0
+offset_bottom = 450.0
 color = Color(0.188235, 0.227451, 0.2, 1)
 material = SubResource("ShaderMaterial_ground")
 mouse_filter = 2

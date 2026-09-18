@@ -54,7 +54,7 @@ Input buffering: hop buffered 0.12s, attack buffered 0.1s.
 - Groups: `"player"` to let enemy `seek`.
 
 ### 5.4 Visual Hook for Art Swap
-- `AnimatedSprite2D` with `SpriteFrames` placeholder: colored rectangles (pink rabbit, ear triangle). Anim names: `idle`, `run`, `hop`, `attack`, `hurt`. All use same placeholder now — swapping to sprite sheet later is just replacing `SpriteFrames` resource.
+- `AnimatedSprite2D` with `SpriteFrames`: player wired to `blueberry_1.png` (placeholder `ColorRect` fallback kept); enemy still placeholder rects (pink rabbit, ear triangle was the old player fallback). Anim names: `idle`, `run`, `hop`, `attack`, `hurt`.
 - Scale: `2x` pixel snap, `texture_filter = Nearest`.
 
 ## 6. Enemy — Basic Chaser (Placeholder: Slime/Berry Bug)
@@ -99,7 +99,7 @@ DEAD --(queue free after 0.6s)-->
 - `physics/common/physics_ticks_per_second = 60`
 
 ### 7.2 Main Scene (`scenes/Main.tscn`)
-- `Node2D (y_sort_enabled = true)` root → `TileMapLayer` or `ColorRect` ground + `StaticBody2D` walls (screen bounds 640×360 expanded to 800×400 scroll)
+- `Node2D (y_sort_enabled = true)` root → ground shader + `StaticBody2D` walls (long arena `2400×900`, viewport `640×360`)
 - `Camera2D` on player, `limit_smoothed = true`, `position_smoothing_enabled = true, speed 6`, drag margin 0.15
 - `CanvasLayer HUD` → Health, Wave, Debug label
 - `Player` instance centered
@@ -138,7 +138,7 @@ BlueBerry/
     enemy.gd
     main.gd
   assets/
-    sprites/  (placeholder, add rabbit.png later)
+    sprites/  (crate/rock/log + player art wired; enemy sheet + sfx still to come)
     sfx/
   README.md
 ```

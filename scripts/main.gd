@@ -6,6 +6,10 @@ enum GameState { START, PLAYING, GAME_OVER }
 @export var max_enemies: int = 6
 @export var spawn_interval: float = 2.2
 @export var arena_size: Vector2 = Vector2(2400, 900)
+# Walkable top edge: nothing (player, enemy, obstacle) may spawn or rest
+# above the horizon line (world y ≈ -90). The Top wall sits at y=-100 to
+# enforce it physically; this margin keeps spawns below it.
+const HORIZON_MIN_Y := -70.0
 
 @onready var enemies: Node2D = $Enemies
 @onready var spawn_timer: Timer = $SpawnTimer
@@ -204,6 +208,8 @@ func _spawn_enemy() -> void:
 			pos = Vector2(player.global_position.x + randf_range(-120, 120), player.global_position.y - arena_size.y * 0.4)
 		3:
 			pos = Vector2(player.global_position.x + randf_range(-120, 120), player.global_position.y + arena_size.y * 0.4)
+	# never above the horizon line
+	pos.y = clampf(pos.y, HORIZON_MIN_Y, arena_size.y * 0.5 - 24.0)
 	e.global_position = pos
 	enemies.add_child(e)
 	if e.has_signal("died"):
@@ -217,7 +223,7 @@ func _spawn_obstacles() -> void:
 	while spawned < obstacle_count and attempts < 120:
 		attempts += 1
 		var x := randf_range(-arena_size.x * 0.46, arena_size.x * 0.46)
-		var y := randf_range(-arena_size.y * 0.42, arena_size.y * 0.42)
+		var y := randf_range(HORIZON_MIN_Y, arena_size.y * 0.42)
 		var pos := Vector2(x, y)
 		# keep start area clear for fair begin
 		if pos.distance_to(Vector2.ZERO) < 140.0:

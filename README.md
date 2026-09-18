@@ -17,14 +17,15 @@ Pixel-art **Beat 'em Up / Belt-Scroll Brawler** (Golden Axe-like). Rabbit hero h
 
 - **Move:** Arrow Keys + WASD (8-dir normalized, `130 px/s`)
 - **Hop / Dodge:** `Space` — i-frames `0.22s`, `64px`, `cooldown 0.45s` (`player.gd:10`)
-- **Mob Attack:** `X` or `Z` — `28×18` front swipe, hitstop `0.05s`
+- **Mob Attack:** `X` or `Z` — `10×6.5` front swipe, hitstop `0.05s`
 - **Game Over:** `SPACE`/`R` → Restart (reload) • `ESC` → Menu (splash) • `ESC` in game → Quit
 
 ## What’s Built (v0.2)
 
 - `scenes/Player.tscn` + `scripts/player.gd` — `IDLE/RUN/HOP/ATTACK/HURT/DEAD`, hop `set_deferred`, attack `hitstop`, `5 HP` hearts.
 - `scenes/Enemy.tscn` + `scripts/enemy.gd` — `IDLE/CHASE/ATTACK/HURT/DEAD`, `detection 220 lose 320 attack 22`, `sep steer`, `3 HP`, `1.1s` cooldown.
-- `scenes/Main.tscn` + `scripts/main.gd` — `y_sort` `800×400` arena walls, `Spawner max6 2.2s` ring, `GameState START/PLAYING/GAME_OVER`, HUD `♥/Wave/Kills`.
+- `scenes/Main.tscn` + `scripts/main.gd` — `y_sort` `2400×900` arena walls, `Spawner max6 2.2s` ring, `GameState START/PLAYING/GAME_OVER`, HUD `♥/Wave/Kills`.
+- `scenes/Obstacle.tscn` + `scripts/obstacle.gd` — jump-over crate/rock/log plus imported forest rocks/trees (layer 32, hop clears).
 - `scenes/StartScreen.tscn` + `scripts/start_screen.gd` — `ALWAYS` dim `0.92`, centered `220×44 START`, `SPACE/ENTER` emits `start_game`.
 - `scenes/GameOverScreen.tscn` + `scripts/game_over_screen.gd` — `ALWAYS` pop `Wave • Kills`, `RESTART`/`Menu`, `SPACE/R`.
 - `project.godot` — `640×360 → 1280×720 canvas_items Nearest`, input `hop/attack`.
@@ -46,10 +47,10 @@ Add features by editing `SPEC.md` + `PLAN.md` first, then `scenes/*.tscn` (keep 
 
 ## Art Swap
 
-Player/Enemy use `AnimatedSprite2D` + empty `SpriteFrames` `idle/run/hop/attack/hurt` + `ColorRect` placeholder. To add rabbit art:
-1. Import `rabbit.png` → `assets/sprites/rabbit.png` `Filter Nearest Mipmap Off`.
-2. `Player.tscn` → `AnimatedSprite2D` → `SpriteFrames` → add frames per name.
-3. Keep hitbox `AttackHitbox 28×18 at 16,-10` — retune if wider.
+Player art is wired (`blueberry_1.png` → `SpriteFrames` `idle/run/hop/attack/hurt`, `ColorRect` fallback kept); Enemy still uses placeholder rects. To swap enemy art:
+1. Import enemy sheet → `assets/sprites/enemy.png` `Filter Nearest Mipmap Off`.
+2. `Enemy.tscn` → `AnimatedSprite2D` → `SpriteFrames` → add frames per name (`idle/run/attack/hurt`).
+3. Keep hitboxes (`Hurtbox 14×18`, `Hitbox 22×14 at 14,-9`) — retune if wider.
 4. `Godot --headless --path . --import` → check `*.import` UID matches `ext_resource`.
 
 Tuning: `GDD.md:10` + `player.gd:10`/`enemy.gd:9` exports.
@@ -63,10 +64,12 @@ BlueBerry/
 ├── COPILOT_INSTRUCTIONS.md .gitignore .gitattributes
 ├── .opencode/AGENTS.md package.json
 ├── .vscode/ settings.json launch.json tasks.json extensions.json
-├── assets/sprites/ assets/sfx/
+├── assets/sprites/ assets/environment/ assets/sfx/
 ├── scenes/Main.tscn Player.tscn Enemy.tscn StartScreen.tscn GameOverScreen.tscn
 └── scripts/main.gd player.gd enemy.gd start_screen.gd game_over_screen.gd
 ```
+
+Third-party art: `assets/environment/kipper_falcon/isometric_forest/` contains selected runtime PNGs from KipperFalcon's Godot Store pack. Keep its `ASSET_NOTES.md` and original `README.txt`; do not repackage it as a standalone asset collection.
 
 ## Git
 

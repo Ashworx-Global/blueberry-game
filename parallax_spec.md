@@ -1,6 +1,6 @@
 # Blue Berry — Parallax Forest Background Specs
 
-> **Viewport:** 640×360 (base) · 1280×720 window · **Arena:** 800×400 scrollable
+> **Viewport:** 640×360 (base) · 1280×720 window · **Arena:** 2400×900 scrollable
 > **Renderer:** GL Compatibility · **Texture Filter:** Nearest (0) · **Pixel Snap:** on
 > **Last Updated:** 2026-09-06
 
@@ -308,14 +308,16 @@ hand-tweak**, not final art.
 | `bg_distant_treeline.png` | 1280×360, opaque | period 1280 | dusk gradient, 2 sine ridges, uneven treetop band + lone pines, stars, birds, fog |
 | `forest_treeline.png` | 512×128, RGBA | period 512 | 15 irregular back pines, 6 blob-canopy trees + trunks, bushes, grass fringe, opaque soil anchor strip, fireflies |
 | `ground_iso.png` | 256×256, RGBA | periods 256 x + y | mottled soil, 120 grass tufts, pebbles, clover, twigs, grain (no sky, no objects) |
-| `fg_trees_left/right.png` | 320×360, RGBA | tiled across 3000px bands (2nd band +160 phase) | trunk mass + canopy + vines, checker-dithered dissolve; world-anchored near layer (factor 0.7), player walks past |
+| `fg_trees_left/right.png` | 640×360, RGBA | one whole tree per 640 tile; bands offset 320 | left = broadleaf (~200px tall), right = pine (~150px tall); trunks run off the tile bottom so they grow from behind the ground plane; transparent gaps ~140px so trees interleave A-gap-B-gap across the world bands |
 | `sky_mountains.png`, `clouds.png` | unchanged | — | kept as spare art (synthwave sky no longer wired) |
 
 **Wiring (differs from §4 where noted):**
 - `Background.tscn` `SkyMountains` texture is now `bg_distant_treeline.png`.
-- Scroll rects are sized **viewport (640) + one tile period**: Sky 1920, Clouds 896, Forest 1152.
+- The horizon is a **fixed world line** (`world y ≈ -90`, ground shader `horizon = 0.115`): walking up moves toward it, walking down moves away. The `Background` node follows the camera in **X only** — never glue it to full `cam_pos` or the horizon sticks to the screen.
+- Scroll rects are sized **viewport (640) + one tile period**: Sky 1920×616, Clouds 896, Forest 1152 (rect y `-150..-22`, treetops above the ridge, bases tucked behind the ground plane). Ground rect `-160..450` so the floor reaches the lowest camera.
 - `background.gd` wraps drift **centered** in `(-period/2, period/2]` via `_centered_wrap()` against `SKY/CLOUD/FOREST_TILE` consts. Plain `fposmod(cam*f, rect.size.x)` opens edge gaps once the camera roams the long arena — do not revert to it.
-- Foreground strips are a **world-anchored near layer** (`parallax_foreground = 0.7`): two 3000px bands (`-1500..1500`, 2nd at `-1340..1660` for phase variety) with repeat on, drifting at 0.7× so the player walks past the trees. Do NOT pin them to the camera — pinning glues them next to the centered player and they read as attached to it.
+- Foreground strips are a **world-anchored near layer** (`parallax_foreground = 0.7`): two 3000px bands (`-1500..1500` + `-1180..1820`, i.e. half-tile offset) with repeat on, drifting at 0.7× and riding 180px above the camera so full canopies sit ON the ridge with trunks behind it. Do NOT pin them to the camera — pinning glues them next to the centered player and they read as attached to it.
+- The ridge is kept **thin**: ground-shader haze `smoothstep(0.0, 0.08, gy)` plus an 8px `HorizonGlow` kiss (`alpha 0.1`) on the line. Widening either turns the horizon into a fog band.
 
 ## 10. Hand-Editing Guide (Clip Studio Paint)
 

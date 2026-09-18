@@ -22,11 +22,11 @@
 - **Entry:** `project.godot:9` `run/main_scene="res://scenes/Main.tscn"` (`uid://b1ueb3rry_main`) — `Main` `Node2D` owns `StartScreen`/`GameOverScreen` via `CanvasLayer`. Do NOT open parent folder as project.
 - **Renderer:** `GL Compatibility` (`project.godot:18`) `textures/canvas_textures/default_texture_filter=0` nearest, `viewport 640×360 → window 1280×720`, `canvas_items` stretch.
 - **VS Code:** `.vscode/settings.json:4` `godotTools.editorPath.godot4` → local Godot exe (see §1), `launch.json:5` type `godot` `port 6007`, `tasks.json:5` headless check. Requires `geequlim.godot-tools 2.7.1`.
-- After adding/replacing art (`assets/sprites/rabbit.png`, `assets/sfx/`), always run `--import` then verify `*.import` UIDs still match `ext_resource` in `.tscn`.
+- After adding/replacing art (sprites, `assets/sfx/`), always run `--import` then verify `*.import` UIDs still match `ext_resource` in `.tscn`.
 
 ## 2. Boot Flow (frame 0)
 
-1. Godot loads `scenes/Main.tscn:1` `Main` `Node2D` (`main.gd:1` `uid://b1ueb3rry_main`) — `y_sort_enabled=true`, `Ground` `ColorRect -400,-200→400,200` (`0.188,0.227,0.2`), `GroundGrid` lines, `Walls` `StaticBody2D` `Top/Bottom (-408/408)`, `Enemies` `Node2D` `y_sort`, `SpawnTimer 2.2s`, `CanvasLayer/HUD` + `StartScreen` + `GameOverScreen`.
+1. Godot loads `scenes/Main.tscn:1` `Main` `Node2D` (`main.gd:1` `uid://b1ueb3rry_main`) — `y_sort_enabled=true`, `Ground` hidden `ColorRect`, `Walls` `StaticBody2D` `Top at horizon y=-100` / `Bottom 458` / `Left-Right ±1208` (nothing walks above the ridge), `Enemies` `Node2D` `y_sort`, `SpawnTimer 2.2s`, `CanvasLayer/HUD` + `StartScreen` + `GameOverScreen`.
 2. `Main._ready:25` sets `y_sort`, connects `SpawnTimer.timeout`, `player.health_changed/died`, `start_screen.start_game → _on_start_game`, `game_over.restart_game/menu_game`. Then calls `show_start_screen:53`.
 3. `show_start_screen` sets `GameState.START`, `wave=1 kills=0`, stops timer, clears `Enemies`, hides `HUD`, shows `StartScreen` (`StartScreen.visible=true`), hides `GameOverScreen`, freezes `Player` `process_mode=DISABLED` (keeps `visible=true` behind dim). Awaits one frame to `grab_focus()` on `StartButton`.
 4. `StartScreen._ready:8` (`start_screen.gd:1` `uid://b1ueb3rry_startscreen`) visits `BG` `ColorRect 0.137,0.137,0.21,0.92 mouse_filter=2` + `Center/VBox` (`Icon` `icon.svg` 96×96, `Title BLUE BERRY 42pt`, `Subtitle` pink, `Divider`, `Controls` 11pt, `StartButton 220×44`, `Hint`, `QuitButton`), `process_mode=ALWAYS`, connects `StartButton.pressed → _on_start_pressed` → emits `start_game`.
@@ -40,7 +40,7 @@
 - **Player** `scripts/player.gd:57` `State {IDLE,RUN,HOP,ATTACK,HURT,DEAD}`:
   - Input `get_vector(move_left/right/up/down)` normalized `*130` → `move_and_slide`, `facing` flips `scale.x` + `AttackHitbox` offset (`_update_facing_visual:161`). Anims `idle/run/hop/attack/hurt` via `_play_anim(anim_name)` (fixed shadowing `name→anim_name:166`).
   - **Hop** `hop:170` `dir = input or facing`, `state HOP`, `hop_timer 0.28`, `iframes 0.22`, `velocity = dir*(64/0.28)`, `Hurtbox monitoring=false` deferred, `await 0.22 → monitoring=true`, flicker `int(ticks/60.0)%2`.
-  - **Attack** `attack:193` `state ATTACK` `timer 0.36` (0.08 windup+0.12 active+0.16 recover), `await 0.08 → _set_attack_active(true)` (`AttackHitbox 28×18` at `16,-10` layer4), `await 0.12 → false`, hit list `attack_hit_enemies`, hitstop `time_scale 0.08 0.05s`.
+  - **Attack** `attack:193` `state ATTACK` `timer 0.36` (0.08 windup+0.12 active+0.16 recover), `await 0.08 → _set_attack_active(true)` (`AttackHitbox 10×6.5` at `5.5,-3.5` layer4), `await 0.12 → false`, hit list `attack_hit_enemies`, hitstop `time_scale 0.08 0.05s`.
   - **Damage** `take_damage:212` ignores if `DEAD`/`hurt_iframe`/`hop_iframe`, `health--`, `health_changed`, `state HURT 0.35` `hurt_iframe 0.8` flash tween, knockback `180`; `health<=0 → _die:240` `DEAD` `Hurtbox monitoring=false` deferred `Collision disabled=true` `died`.
 - **Enemy** `scripts/enemy.gd:55` `State {IDLE,CHASE,ATTACK,HURT,DEAD}`:
   - `IDLE` wander `wander_speed 18` `±0.5 y` 70% idle; `_can_see_player:133` `dist<=220` → `CHASE`.
@@ -65,6 +65,12 @@
 | `scripts/enemy.gd` | — | `detection 220 lose 320 attack 22` |
 | `scripts/start_screen.gd` | — | `signal start_game` `ALWAYS` |
 | `scripts/game_over_screen.gd` | — | `signals restart/menu` `ALWAYS` |
+| `scenes/Obstacle.tscn` | — | jump-over crate/rock/log + forest rocks/trees, `obstacle.gd`, layer 32, group `obstacle` |
+| `assets/sprites/crate|rock|log.png` | — | original obstacle art, `Nearest`, picked by `obstacle.gd` |
+| `assets/environment/kipper_falcon/isometric_forest/` | — | KipperFalcon Godot Store pack runtime PNGs + original `README.txt`; used by forest obstacle variants |
+| `blueberry_1.png` | `uid://ddp8fxr6as2ox` | player `SpriteFrames` source (64×64) |
+| `assets/environment/kipper_falcon/…` | — | forest trees/rocks obstacles (see its `ASSET_NOTES.md`) |
+| `assets/environment/morbid_ember/…` | — | 64 RPG item icons, MIT (see its `ASSET_NOTES.md`); `blueberries_01`/`potion_red_01` reserved for pickups |
 | `scenes/Background.tscn` | `uid://b1ueb3rry_bg` | parallax layers + ground shader mount |
 | `scripts/background.gd` | — | period wrap (`SKY 1280/CLOUD 256/FOREST 512`), pinned FG strips |
 | `assets/backgrounds/*.png` | — | tileable forest set; edit rules `parallax_spec.md` §10 |
@@ -74,9 +80,10 @@ Verify: UID strings in `*.import` vs `ext_resource` in `.tscn` (`Select-String u
 
 ## 5. Art Pipeline
 
-- **Background layers (procedural bases, 2026-09-18):** `bg_distant_treeline 1280` (period 1280) → `clouds 256` (period 256) → `forest_treeline 512` (period 512) → near trees `fg_trees_left/right 320` tiled across 3000px world bands (factor 0.7, player walks past) → ground shader tile `ground_iso 256` (periods 256 x+y). Scroll rects are `viewport 640 + one period` wide; `background.gd` wraps drift centered via `_centered_wrap()` — never `fposmod(cam*f, rect.size.x)`, it gaps on the long arena; never pin FG strips to the camera, they read as attached to the player.
-- **Placeholders:** `Player`/`Enemy` use `AnimatedSprite2D` + empty `SpriteFrames` `idle/run/hop/attack/hurt` + `ColorRect` bodies (pink rabbit `0.99,0.72,0.88` ears, green enemy `0.35,0.72,0.35`). Attack/Hit debug `ColorRect` hidden.
-- **Swap:** Import `assets/sprites/rabbit.png` `Filter Nearest Mipmap Off`, edit `Player.tscn:AnimatedSprite2D SpriteFrames` add frames, keep names. Hitbox `28×18` at `16,-10` may need retune if sprite wider.
+- **Background layers (procedural bases, 2026-09-18):** `bg_distant_treeline 1280` (period 1280) → `clouds 256` (period 256) → `forest_treeline 512` (period 512, rect y `-150..-22`, only treetops clear the ridge) → near trees `fg_trees_left/right 640` tiled across 3000px world bands (factor 0.7, single ~150–200px trees with gaps, canopies ON the ridge, thin `0.08` haze + 8px glow) → ground shader tile `ground_iso 256` with **world-fixed horizon** (`horizon 0.115` ≈ world y `-90`; node follows camera X only). Scroll rects are `viewport 640 + one period` wide; `background.gd` wraps drift centered via `_centered_wrap()` — never `fposmod(cam*f, rect.size.x)`, it gaps on the long arena; never pin FG strips to the camera, they read as attached to the player.
+- **Placeholders:** `Enemy` uses `AnimatedSprite2D` + empty `SpriteFrames` + green `ColorRect` body (`0.35,0.72,0.35`). Player art is wired (`blueberry_1.png`, `ColorRect` fallback kept). Attack/Hit debug `ColorRect` hidden.
+- **Swap (enemy next):** Import enemy sheet `Filter Nearest Mipmap Off`, edit `Enemy.tscn:AnimatedSprite2D SpriteFrames` add frames, keep names. Hitboxes `14×18` / `22×14 at 14,-9` may need retune if sprite wider.
+- **Vendor environment art:** `assets/environment/kipper_falcon/isometric_forest/` contains selected runtime PNGs from KipperFalcon's "Isometric Forest Pixel Art 2D" pack. `scripts/obstacle.gd` randomizes forest rocks/trees alongside crate/rock/log. Keep `ASSET_NOTES.md` + original `README.txt`; do not repackage this folder as a standalone asset collection.
 - **After art:** `Godot --import` → `.godot/imported/*.ctex` + `*.import` updated. Do NOT edit `*.import` hash manually.
 - **Never commit** `.godot/` (`*.ctex/*.md5`) — in `.gitignore`.
 - **Hand-edits:** Clip Studio source `assets/backgrounds/blueberry_backgound.clip`; seamless-edge + export rules in `parallax_spec.md` §10.
@@ -85,11 +92,12 @@ Verify: UID strings in `*.import` vs `ext_resource` in `.tscn` (`Select-String u
 
 | Layer | Name | Used by |
 |-------|------|---------|
-| 1 | world | `Walls StaticBody` `TileMap` if added, Player `mask 1` |
+| 1 | world | `Walls StaticBody` `TileMap` if added, Player `mask 33` (1+32), `1` during HOP |
 | 2 | player_hurtbox | `Player/Hurtbox` `layer2 mask16` |
 | 4 | player_attack | `Player/AttackHitbox` `layer4 mask8` |
 | 8 | enemy_hurtbox | `Enemy/Hurtbox` `layer8 mask4` |
 | 16 | enemy_attack | `Enemy/Hitbox` `layer16 mask2` |
+| 32 | obstacle | `Obstacle` `StaticBody layer32 mask0`; player body mask `33` drops to `1` during HOP |
 
 Masks must overlap: `player_attack 4 → enemy_hurtbox 8`, `enemy_attack 16 → player_hurtbox 2`.
 
@@ -111,9 +119,9 @@ Masks must overlap: `player_attack 4 → enemy_hurtbox 8`, `enemy_attack 16 → 
 
 ## 8. Known Stubs / TODO
 
-- `AnimatedSprite2D SpriteFrames` empty — needs `rabbit.png` sheet (`idle/run/hop/attack/hurt`).
+- `AnimatedSprite2D SpriteFrames` for Enemy still empty — needs slime/bug sheet (`idle/run/attack/hurt`).
 - `default_env.tres` solid color only — add `WorldEnvironment` fog/parallax later.
-- `assets/sprites/` + `assets/sfx/` empty — add `blueberry_pickup.tscn`, rabbit sheet (`backgrounds/` forest set is done, see §5).
+- `assets/sfx/` empty — add hop/attack/hurt wavs. `assets/sprites/` now holds crate/rock/log; `assets/environment/kipper_falcon/isometric_forest/` holds imported forest obstacle art; backgrounds forest set is done (see §5).
 - `CanvasLayer/HUD/InfoLabel` only during PLAYING — splash controls hint duplicated.
 - `.godot/` cache ignored — first clone needs `Godot --import`.
 
