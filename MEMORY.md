@@ -69,6 +69,8 @@
 | `assets/sprites/crate|rock|log.png` | — | original obstacle art, `Nearest`, picked by `obstacle.gd` |
 | `assets/environment/kipper_falcon/isometric_forest/` | — | KipperFalcon Godot Store pack runtime PNGs + original `README.txt`; used by forest obstacle variants |
 | `blueberry_1.png` | `uid://ddp8fxr6as2ox` | player `SpriteFrames` source (64×64) |
+| `assets/environment/kipper_falcon/…` | — | forest trees/rocks obstacles (see its `ASSET_NOTES.md`) |
+| `assets/environment/morbid_ember/…` | — | 64 RPG item icons, MIT (see its `ASSET_NOTES.md`); `blueberries_01`/`potion_red_01` reserved for pickups |
 | `scenes/Background.tscn` | `uid://b1ueb3rry_bg` | parallax layers + ground shader mount |
 | `scripts/background.gd` | — | period wrap (`SKY 1280/CLOUD 256/FOREST 512`), pinned FG strips |
 | `assets/backgrounds/*.png` | — | tileable forest set; edit rules `parallax_spec.md` §10 |
