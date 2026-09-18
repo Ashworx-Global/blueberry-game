@@ -36,8 +36,9 @@ void fragment() {
 	// sample tiled ground — fract for continuous repeat (90s tile)
 	vec4 tex = texture(ground_tex, fract(g_uv));
 	
-	// distance fade / horizon haze — 90s muted
-	float haze = smoothstep(0.0, 0.28, gy); // fade in from horizon
+	// distance fade / horizon haze — kept tight (0.08) so the ridge reads
+	// as a thin crisp line, not a wide fog band
+	float haze = smoothstep(0.0, 0.08, gy); // fade in from horizon
 	float vign = 1.0 - 0.12 * length((uv - vec2(0.5, 0.85)) * vec2(1.4, 1.0));
 	tex.a *= haze;
 	tex.rgb *= vign;

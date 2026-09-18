@@ -12,7 +12,7 @@ extends Node2D
 @export var parallax_foreground: float = 0.7 # near world layer (player walks past it)
 @export var parallax_forest: float = 0.38
 @export var ground_tiling: float = 2.6
-@export var ground_horizon: float = 0.38
+@export var ground_horizon: float = 0.115 # world-fixed horizon line (world y ≈ -90)
 # Scroll-tile periods (px) — MUST match each texture's seamless width.
 # Rects are sized viewport (640) + one period so the centered wrap below
 # never exposes an edge, even on the 2400px-wide arena.
@@ -67,8 +67,10 @@ func _process(delta: float) -> void:
 		var cam2: Camera2D = get_node("../Player/Camera2D")
 		cam_pos = cam2.global_position
 
-	# follow camera so background always fills viewport on large maps (2400x900)
-	global_position = cam_pos
+	# Follow the camera horizontally only. The horizon lives at a fixed WORLD
+	# y (ground shader), so walking up moves TOWARD it and walking down moves
+	# AWAY — it must never be glued to the screen.
+	global_position = Vector2(cam_pos.x, 0.0)
 
 	# Parallax offsets — centered wrap around each texture's tile period.
 	# Plain fposmod(cam*f, rect.size.x) opens gaps once the camera roams the
@@ -88,10 +90,12 @@ func _process(delta: float) -> void:
 		# World-anchored near layer: drifts across the screen at its own rate
 		# so the player walks PAST the trees. (Pinning these to the camera
 		# glued them next to the centered player — looked attached.)
-		# Bands are 3000px wide with 292px+ margins: no wrap needed.
-		fg_left_rect.position.x = -cam_pos.x * parallax_foreground
+		# Bands are 3000px wide with 292px+ margins: no wrap needed on x.
+		# Vertically they ride 180px above the camera so full canopies sit
+		# ON the ridge line with trunks disappearing behind it.
+		fg_left_rect.position = Vector2(-cam_pos.x * parallax_foreground, cam_pos.y - 180.0)
 	if fg_right_rect:
-		fg_right_rect.position.x = -cam_pos.x * parallax_foreground
+		fg_right_rect.position = Vector2(-cam_pos.x * parallax_foreground, cam_pos.y - 180.0)
 
 	# Ground shader scroll — 1:1 with world plus time drift if discovery
 	if ground_mat:

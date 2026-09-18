@@ -78,7 +78,7 @@ Kill → score + `kills%6 → wave++`, `kills%8 → wave++` (spawner ramp, futur
 ## 6. Spawner (`scripts/main.gd:167`)
 
 - `enemy_scene preload Enemy.tscn`, `max_enemies 6`, `spawn_interval 2.2`, `arena_size 2400×900` (`main.gd:8`), `SpawnTimer`.
-- `_spawn_enemy` ring `side 0..3` at `player ± arena*0.45` + `randf_range ±80/120`, `_margin 40` (reserved). Gated by `PLAYING`.
+- `_spawn_enemy` ring `side 0..3` at `player ± arena*0.45` + `randf_range ±80/120`, `_margin 40` (reserved). Gated by `PLAYING`. Spawn y clamped to `HORIZON_MIN_Y -70` — never above the ridge.
 
 ---
 
@@ -89,7 +89,8 @@ Kill → score + `kills%6 → wave++`, `kills%8 → wave++` (spawner ramp, futur
 ```
 Main [Node2D] y_sort script=main.gd GameState START/PLAYING/GAME_OVER
 ├── Ground ColorRect -400,-200→400,200 0.188,0.227,0.2 + GroundGrid lines 0.05
-├── Walls StaticBody Top/Bottom ±458 2400×16 Left/Right ±1208 16×900
+├── Walls StaticBody Top at horizon (y=-100, 2400×16) / Bottom ±458 / Left-Right ±1208 16×900 — nothing walks above the ridge
+├── Player instance Player.tscn 0,0 (min y ≈ -92 against Top wall)
 ├── Player instance Player.tscn 0,0
 ├── Obstacles Node2D y_sort (jump-over crate/rock/log, `Obstacle.tscn`/`obstacle.gd`, layer 32; HOP mask drops to 1 to clear them)
 ├── Enemies Node2D y_sort
