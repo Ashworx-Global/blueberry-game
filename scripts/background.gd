@@ -19,6 +19,27 @@ extends Node2D
 const SKY_TILE := 1280.0 # bg_distant_treeline.png
 const CLOUD_TILE := 256.0 # clouds.png
 const FOREST_TILE := 512.0 # forest_treeline.png
+# Base rect offsets (Background.tscn). NEVER assign .position on these
+# TextureRects: Control.position overwrites offset_left/top and slides the
+# whole rect off its designed frame (rects then cover only x>=0 and most
+# layers vanish). Shift offset_left/right (+top/bottom) instead, preserving
+# size, so the rect stays centered on the design frame.
+const SKY_L := -960.0
+const SKY_R := 960.0
+const SKY_T := -560.0
+const SKY_B := 56.0
+const CLOUD_L := -448.0
+const CLOUD_R := 448.0
+const FOREST_L := -576.0
+const FOREST_R := 576.0
+const FOREST_T := -150.0
+const FOREST_B := -22.0
+const FG_L := -1500.0
+const FG_R := 1500.0
+const FG_L2 := -1180.0
+const FG_R2 := 1820.0
+const FG_T := -180.0
+const FG_B := 180.0
 
 @onready var sky_rect: TextureRect = $Parallax/SkyMountains
 @onready var clouds_rect: TextureRect = $Parallax/Clouds
@@ -76,16 +97,27 @@ func _process(delta: float) -> void:
 	# Plain fposmod(cam*f, rect.size.x) opens gaps once the camera roams the
 	# long arena, because drift range exceeds the viewport margin. Centering
 	# the drift in (-period/2, period/2] keeps both edges covered.
+	# NOTE: shift via offset_left/right/top/bottom (NOT .position — assigning
+	# Control.position overwrites the designed frame; see const block above).
 	if sky_rect:
-		sky_rect.position.x = _centered_wrap(cam_pos.x * parallax_sky, SKY_TILE)
-		# slight y with horizon
-		sky_rect.position.y = -fposmod(cam_pos.y * 0.03, 8.0)
+		var sky_dx := _centered_wrap(cam_pos.x * parallax_sky, SKY_TILE)
+		var sky_dy := -fposmod(cam_pos.y * 0.03, 8.0)
+		sky_rect.offset_left = SKY_L + sky_dx
+		sky_rect.offset_right = SKY_R + sky_dx
+		sky_rect.offset_top = SKY_T + sky_dy
+		sky_rect.offset_bottom = SKY_B + sky_dy
 	if clouds_rect:
 		_cloud_scroll += delta * auto_speed_x
-		clouds_rect.position.x = _centered_wrap(cam_pos.x * parallax_clouds + _cloud_scroll, CLOUD_TILE)
+		var cloud_dx := _centered_wrap(cam_pos.x * parallax_clouds + _cloud_scroll, CLOUD_TILE)
+		clouds_rect.offset_left = CLOUD_L + cloud_dx
+		clouds_rect.offset_right = CLOUD_R + cloud_dx
 	if forest_rect:
-		forest_rect.position.x = _centered_wrap(cam_pos.x * parallax_forest, FOREST_TILE)
-		forest_rect.position.y = -fposmod(cam_pos.y * 0.06, 6.0)
+		var forest_dx := _centered_wrap(cam_pos.x * parallax_forest, FOREST_TILE)
+		var forest_dy := -fposmod(cam_pos.y * 0.06, 6.0)
+		forest_rect.offset_left = FOREST_L + forest_dx
+		forest_rect.offset_right = FOREST_R + forest_dx
+		forest_rect.offset_top = FOREST_T + forest_dy
+		forest_rect.offset_bottom = FOREST_B + forest_dy
 	if fg_left_rect:
 		# World-anchored near layer: drifts across the screen at its own rate
 		# so the player walks PAST the trees. (Pinning these to the camera
@@ -93,9 +125,19 @@ func _process(delta: float) -> void:
 		# Bands are 3000px wide with 292px+ margins: no wrap needed on x.
 		# Vertically they ride 180px above the camera so full canopies sit
 		# ON the ridge line with trunks disappearing behind it.
-		fg_left_rect.position = Vector2(-cam_pos.x * parallax_foreground, cam_pos.y - 180.0)
+		var fg_dx := -cam_pos.x * parallax_foreground
+		var fg_dy := cam_pos.y - 180.0
+		fg_left_rect.offset_left = FG_L + fg_dx
+		fg_left_rect.offset_right = FG_R + fg_dx
+		fg_left_rect.offset_top = FG_T + fg_dy
+		fg_left_rect.offset_bottom = FG_B + fg_dy
 	if fg_right_rect:
-		fg_right_rect.position = Vector2(-cam_pos.x * parallax_foreground, cam_pos.y - 180.0)
+		var fg2_dx := -cam_pos.x * parallax_foreground
+		var fg2_dy := cam_pos.y - 180.0
+		fg_right_rect.offset_left = FG_L2 + fg2_dx
+		fg_right_rect.offset_right = FG_R2 + fg2_dx
+		fg_right_rect.offset_top = FG_T + fg2_dy
+		fg_right_rect.offset_bottom = FG_B + fg2_dy
 
 	# Ground shader scroll — 1:1 with world plus time drift if discovery
 	if ground_mat:
