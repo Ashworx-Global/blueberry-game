@@ -73,6 +73,23 @@ godot --headless --path . --quit --verbose
 
 Expected result: no parser errors and no new warnings. If Godot is unavailable, state that clearly in the final response.
 
+## Signed Commits
+
+When creating commits on this machine, use the local opencode skill at:
+
+`$HOME/.config/opencode/skills/gpg-signed-commits/SKILL.md`
+
+Rules from that skill:
+
+- Never create an unsigned commit.
+- Resolve the wrapper with `WRAPPER="$HOME/.config/opencode/skills/gpg-signed-commits/gpg-with-passphrase.sh"`.
+- Ensure the wrapper is configured as `gpg.program`.
+- Use `git commit -S ...` explicitly, even when `commit.gpgsign=true`.
+- For amend/rebase/cherry-pick/merge commits, use the signed equivalents such as `git commit --amend -S --no-edit` and `git rebase --gpg-sign`.
+- Verify after committing with `git log -1 --show-signature`.
+- Never print, echo, log, or store the GPG passphrase or `$GPG` value.
+- If signing fails, ask the user rather than falling back to an unsigned commit.
+
 ## Documentation Policy
 
 When changing mechanics, controls, scene hierarchy, collision layers, or asset pipeline:

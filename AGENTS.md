@@ -16,6 +16,7 @@ Follow `SPEC.md` if any docs conflict, then update stale docs in the same change
 - Treat this as a Godot 4.7.2 GDScript-only project.
 - Keep changes scoped and consistent with the current scene/script layout.
 - Do not commit or edit `.godot/` cache output.
+- When asked to commit, follow the GPG signing skill at `$HOME/.config/opencode/skills/gpg-signed-commits/SKILL.md`: use `git commit -S`, verify with `git log -1 --show-signature`, and never create unsigned commits.
 - Preserve pixel-art settings: nearest filtering, `640x360` base viewport, GL Compatibility.
 - Keep `.tscn` resource ordering valid: `ext_resource` before `sub_resource` before `node`.
 - Verify with headless Godot import/quit when available.
