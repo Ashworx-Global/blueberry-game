@@ -14,7 +14,7 @@
 1. Write clear comments with Godot node types/signals: `# Spawn enemy on ring around player: CharacterBody2D + Area2D Hitbox layer16`.
 2. Use descriptive names (`hop_iframes`, `attack_cooldown`, `detection_range`) — matches `player.gd:10` / `enemy.gd:9`.
 3. Reference `.tscn` ordering: `gd_scene → ext_resource → sub_resource → node`, `load_steps = ext+sub`.
-4. For physics, mention layers: `player_attack 4 → enemy_hurtbox 8`.
+4. For physics, mention layers: `player_attack 4 → enemy_hurtbox 8`; obstacles live on `32`, player body mask `33` drops to `1` during hop to clear them.
 5. Always `set_deferred("monitoring",…)` inside `area_entered` flush; use `PROCESS_MODE_ALWAYS` for splash/game-over, `DISABLED` to freeze player.
 6. Review suggestions, test via `F5` or `Godot --headless --quit`.
 

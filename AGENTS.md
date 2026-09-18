@@ -24,9 +24,10 @@ Follow `SPEC.md` if any docs conflict, then update stale docs in the same change
 ## Important Files
 
 - `project.godot` — main scene and engine settings.
-- `scenes/Main.tscn` + `scripts/main.gd` — game state, HUD, spawner, start/game-over flow.
-- `scenes/Player.tscn` + `scripts/player.gd` — rabbit controls, hop, attack, health.
+- `scenes/Main.tscn` + `scripts/main.gd` — game state, HUD, spawner, `2400×900` arena, start/game-over flow.
+- `scenes/Player.tscn` + `scripts/player.gd` — rabbit controls, hop (clears obstacles), attack, health; art wired from `blueberry_1.png`.
 - `scenes/Enemy.tscn` + `scripts/enemy.gd` — chaser AI and combat.
+- `scenes/Obstacle.tscn` + `scripts/obstacle.gd` — jump-over crate/rock/log, layer 32.
 - `scenes/StartScreen.tscn`, `scenes/GameOverScreen.tscn` — shell flow UI.
 - `scenes/Background.tscn`, `scenes/Parallax*.tscn`, `scripts/background.gd`, `parallax_spec.md` — background/parallax work.
 

@@ -50,6 +50,7 @@ Blue Berry is a Godot 4.7.2 pixel-art beat 'em up / belt-scroll brawler. A rabbi
   - `4` player attack
   - `8` enemy hurtbox
   - `16` enemy attack
+  - `32` obstacle (StaticBody; player body mask `33` normally, drops to `1` during HOP so hops clear crates/rocks/logs)
 - Preserve the boot loop: `START -> PLAYING -> GAME_OVER -> reload/menu -> START`.
 
 ## Godot Scene Rules
@@ -102,8 +103,9 @@ When changing mechanics, controls, scene hierarchy, collision layers, or asset p
 
 ## Current Gameplay Contract
 
-- Player: rabbit, `5 HP`, 8-direction movement, hop dodge, front attack, hurt/death states.
+- Player: rabbit, `5 HP`, 8-direction movement, hop dodge (clears layer-32 obstacles), front attack, hurt/death states.
 - Enemy: basic chaser, wander/chase/attack/hurt/dead states.
-- Main: owns start screen, HUD, spawner, game-over flow, and arena.
+- Main: owns start screen, HUD, spawner, game-over flow, and the `2400×900` arena.
+- Obstacles: jump-over crate/rock/log (`Obstacle.tscn`/`obstacle.gd`), random type, layer 32.
 - Controls: WASD/arrows move, Space hop, X/Z attack, UI accept for screens.
 - Core feel: readable hitboxes, hop as defense, swarm pressure, crisp pixel presentation.

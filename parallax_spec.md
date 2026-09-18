@@ -1,6 +1,6 @@
 # Blue Berry — Parallax Forest Background Specs
 
-> **Viewport:** 640×360 (base) · 1280×720 window · **Arena:** 800×400 scrollable
+> **Viewport:** 640×360 (base) · 1280×720 window · **Arena:** 2400×900 scrollable
 > **Renderer:** GL Compatibility · **Texture Filter:** Nearest (0) · **Pixel Snap:** on
 > **Last Updated:** 2026-09-06
 
