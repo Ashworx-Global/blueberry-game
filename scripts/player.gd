@@ -34,6 +34,7 @@ var hurt_iframe_timer: float = 0.0
 var hop_dir: Vector2 = Vector2.RIGHT
 var attack_hit_enemies: Array = []  # to ensure one hit per swing
 var _hop_saved_mask: int = 33
+var _sprite_base_y: float = -10.0
 
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var collision: CollisionShape2D = $CollisionShape2D
@@ -53,6 +54,7 @@ func _ready() -> void:
 	if not attack_hitbox.area_entered.is_connected(_on_attack_hitbox_area_entered):
 		attack_hitbox.area_entered.connect(_on_attack_hitbox_area_entered)
 	_update_facing_visual()
+	_sprite_base_y = sprite.position.y
 	_play_anim("idle")
 
 func _physics_process(delta: float) -> void:
@@ -86,12 +88,12 @@ func _physics_process(delta: float) -> void:
 			# visual hop arc — rise and fall
 			var hop_progress: float = 1.0 - (hop_timer / hop_duration)
 			var hop_height: float = 14.0 * sin(hop_progress * PI) # 90s hop arc
-			sprite.position.y = -18.0 - hop_height
+			sprite.position.y = _sprite_base_y - hop_height
 			if hop_timer <= 0.0:
 				velocity = velocity * 0.2  # retain slight momentum
 				state = State.IDLE
 				sprite.visible = true
-				sprite.position.y = -18.0
+				sprite.position.y = _sprite_base_y
 				# restore obstacle collision (re-enable jumping)
 				collision_mask = _hop_saved_mask
 				_update_facing_visual()
@@ -167,7 +169,8 @@ func _get_move_input() -> Vector2:
 	return v
 
 func _update_facing_visual() -> void:
-	sprite.scale.x = abs(sprite.scale.x) * facing
+	# strip art faces LEFT, so negate: facing right (1) mirrors to -x, facing left (-1) shows as-drawn
+	sprite.scale.x = -abs(sprite.scale.x) * facing
 	# mirror attack offset
 	attack_hitbox.position.x = abs(attack_hitbox.position.x) * facing
 
@@ -223,7 +226,7 @@ func _set_attack_active(active: bool) -> void:
 func _restore_hop_collision() -> void:
 	if collision_mask != _hop_saved_mask:
 		collision_mask = _hop_saved_mask
-	sprite.position.y = -18.0
+	sprite.position.y = _sprite_base_y
 
 func take_damage(amount: int, from_pos: Vector2) -> void:
 	if state == State.DEAD: return

@@ -54,7 +54,7 @@ Input buffering: hop buffered 0.12s, attack buffered 0.1s.
 - Groups: `"player"` to let enemy `seek`.
 
 ### 5.4 Visual Hook for Art Swap
-- `AnimatedSprite2D` with `SpriteFrames`: player wired to `blueberry_1.png` (placeholder `ColorRect` fallback kept); enemy still placeholder rects (pink rabbit, ear triangle was the old player fallback). Anim names: `idle`, `run`, `hop`, `attack`, `hurt`.
+- `AnimatedSprite2D` with `SpriteFrames`: player movement on `assets/sprites/rabbit_run.png` 5-frame strip (`idle/run/hop`; `attack/hurt` still `blueberry_1.png`, placeholder `ColorRect` fallback kept); enemy still placeholder rects (pink rabbit, ear triangle was the old player fallback). Anim names: `idle`, `run`, `hop`, `attack`, `hurt`.
 - Scale: `2x` pixel snap, `texture_filter = Nearest`.
 
 ## 6. Enemy — Basic Chaser (Placeholder: Slime/Berry Bug)

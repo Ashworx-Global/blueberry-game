@@ -8,7 +8,7 @@
 
 - **Loop:** `StartScreen (dim 0.92, ALWAYS) 640×360` → `Main 2400×900 arena y_sort` → `Player 5HP 130 hop 64/0.28 i-frame 0.22 (clears layer-32 obstacles)` `WASD/Arrows + Space hop + X/Z attack 10×6.5 hitstop` → `Enemy chase 68 detection 220 lose 320 attack 22 sep` `HP3` → `Spawner 2 + every 2.2s max6 ring` → `HUD ♥/Wave/Kills` → `GameOverScreen pop → SPACE/R → reload → Start`.
 - **Tech:** `load_steps` strict ordering, `set_deferred` for monitoring, `anim_name` fix, `60.0` float division, `_margin` ignore, `mouse_filter IGNORE` on BG, `ALWAYS` for UI, no `paused` freeze (DISABLED player).
-- ** debt:** `SpriteFrames` placeholders on Enemy only (player wired to `blueberry_1.png`), `assets/sfx/` empty, `default_env` solid.
+- ** debt:** `SpriteFrames` placeholders on Enemy only (player movement on `rabbit_run.png` strip, `attack/hurt` still `blueberry_1.png`), `assets/sfx/` empty, `default_env` solid.
 - **Done since v0.2:** arena `800×400→2400×900`, jump-over obstacles (crate/rock/log + KipperFalcon forest rocks/trees, layer 32), player art wired, tileable forest parallax with period-correct wrap.
 
 ---
@@ -18,6 +18,7 @@
 ### Sprint 1 — Art Swap & Juice (1–2 days)
 **Goal:** Rabbit feels good; no new systems.
 - [x] **Rabbit sheet (2026-09-18):** `blueberry_1.png` `64×64` wired as `Player.tscn` `SpriteFrames` `idle/run/hop/attack/hurt`.
+- [x] **Rabbit run strip (2026-09-25):** `assets/sprites/rabbit_run.png` `1280×256` (5× `256×256`, bg cleared) wired as `idle` (frame 0) / `run` (5f @10fps) / `hop` (5f @12fps); sprite `pos 0,-10 scale 0.2`; hop rest pose via `_sprite_base_y`.
 - [ ] **Enemy skin:** `slime/bug` `16×16 @2×` for `Enemy.tscn` `idle/run/attack/hurt`.
 - [ ] **Hitstop + flash:** Verify `player.gd:270 time_scale 0.08 0.05s` already; add enemy flash `0.12s` + `Camera shake 2px` on hit.
 - [ ] **Hop feel:** Playtest `hop_distance 64→72` if short, `cooldown 0.45→0.38` if sticky.

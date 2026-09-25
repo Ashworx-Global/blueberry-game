@@ -53,7 +53,7 @@ Add features by editing `SPEC.md` + `PLAN.md` first, then `scenes/*.tscn` (keep 
 
 ## Art Swap
 
-Player art is wired (`blueberry_1.png` → `SpriteFrames` `idle/run/hop/attack/hurt`, `ColorRect` fallback kept); Enemy still uses placeholder rects. To swap enemy art:
+Player movement art is the `assets/sprites/rabbit_run.png` 5-frame strip (`idle/run/hop`; `attack/hurt` still `blueberry_1.png`, `ColorRect` fallback kept); Enemy still uses placeholder rects. To swap enemy art:
 1. Import enemy sheet → `assets/sprites/enemy.png` `Filter Nearest Mipmap Off`.
 2. `Enemy.tscn` → `AnimatedSprite2D` → `SpriteFrames` → add frames per name (`idle/run/attack/hurt`).
 3. Keep hitboxes (`Hurtbox 14×18`, `Hitbox 22×14 at 14,-9`) — retune if wider.
