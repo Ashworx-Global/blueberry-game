@@ -71,9 +71,12 @@
 | `assets/environment/kipper_falcon/isometric_forest/` | — | KipperFalcon Godot Store pack runtime PNGs + original `README.txt`; used by forest obstacle variants |
 | `blueberry_1.png` | `uid://ddp8fxr6as2ox` | player `attack/hurt` frames (64×64) |
 | `assets/sprites/rabbit_run.png` | — | player `idle/run/hop` 5-frame strip (`1280×256`, frames 256×256, gray bg cleared to alpha) |
+| `assets/sprites/rabbit_updown.png` | — | player `run_up`/`run_down` top-down single frame (`256×180`, black bg border-flood-cleared); picked by dominant axis in `player.gd` movement |
 | `assets/environment/kipper_falcon/…` | — | forest trees/rocks obstacles (see its `ASSET_NOTES.md`) |
 | `assets/environment/morbid_ember/…` | — | 64 RPG item icons, MIT (see its `ASSET_NOTES.md`); `blueberries_01`/`potion_red_01` reserved for pickups |
 | `tools/screenshot.gd` | — | dev-only screenshot harness (SceneTree); regenerates `docs/showcase/*.png` |
+| `tools/run-headless.sh` | — | standalone headless runner (`--headless --quit --verbose`); same invocation as `run-game.sh smoke`, runnable without the skill |
+| `tools/run-game.sh` | — | standalone playable runner (windowed `--path`); same invocation as `run-game.sh play` |
 | `scenes/Background.tscn` | `uid://b1ueb3rry_bg` | parallax layers + ground shader mount |
 | `scripts/background.gd` | — | period wrap (`SKY 1280/CLOUD 256/FOREST 512`), pinned FG strips |
 | `assets/backgrounds/*.png` | — | tileable forest set; edit rules `parallax_spec.md` §10 |

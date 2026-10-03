@@ -26,9 +26,13 @@ Follow `SPEC.md` if any docs conflict, then update stale docs in the same change
 
 - `project.godot` — main scene and engine settings.
 - `scenes/Main.tscn` + `scripts/main.gd` — game state, HUD, spawner, `2400×900` arena, start/game-over flow.
-- `scenes/Player.tscn` + `scripts/player.gd` — rabbit controls, hop (clears obstacles), attack, health; movement art from `assets/sprites/rabbit_run.png` 5-frame strip (`attack/hurt` still `blueberry_1.png`).
+- `scenes/Player.tscn` + `scripts/player.gd` — rabbit controls, hop (clears obstacles), attack, health; side art `assets/sprites/rabbit_run.png` 5-frame strip (`idle/run/hop`), vertical art `assets/sprites/rabbit_updown.png` (`run_up`/`run_down`, dominant-axis pick), `attack/hurt` still `blueberry_1.png`.
 - `scenes/Enemy.tscn` + `scripts/enemy.gd` — chaser AI and combat.
 - `scenes/Obstacle.tscn` + `scripts/obstacle.gd` — jump-over crate/rock/log plus KipperFalcon forest rocks/trees, layer 32.
+- `assets/vendor/2dpixx/` — 2DPIXX isometric fantasy pack (CC-BY-4.0, Jana Ochse): forest/dungeon/village sheets + 9 char sheets, `ATTRIBUTION.md` layouts; flora props per `PLAN.md` Forest Floor Plan (iso ground blocks NOT for flat floor).
+- `scenes/Main.tscn` — `GroundTiles` TileMapLayer (`scripts/ground.gd`, runtime TileSet from `tileset-forest.png`, z -1) + moss `Ground` underlay (z -2): full-arena grass-block meadow.
+- `scenes/Flora.tscn` + `scripts/flora.gd` — 2DPIXX forest dressing, direct Main children for y_sort: `decor` (bush/tuft, layer 0) + `block` (tree/rock, layer 1); cells in `assets/sprites/forest/pix_*.png` @0.5, seeded scatter in `main.gd`.
+- `scripts/obstacle.gd` — also has 7 hop-able 2DPIXX `pix_*` variants (stump/logs/mound @0.5, layer 32).
 - `scenes/StartScreen.tscn`, `scenes/GameOverScreen.tscn` — shell flow UI.
 - `scenes/Background.tscn`, `scenes/Parallax*.tscn`, `scripts/background.gd`, `parallax_spec.md` — background/parallax work.
 - `.opencode/skills/run-game/` — `run-game` skill: run/play/verify the game via `run-game.sh` (`play`/`editor`/`import`/`check`/`smoke`), not ad-hoc `godot` commands. Shortcut: `/run` (`.opencode/commands/run.md`, defaults to headless `smoke`).

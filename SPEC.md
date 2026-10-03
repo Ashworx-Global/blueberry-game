@@ -50,11 +50,11 @@ Kill → score + `kills%6 → wave++`, `kills%8 → wave++` (spawner ramp, futur
 - **Body:** `CharacterBody2D` `groups=["player"]` `collision layer 0 mask 33` (world 1 + obstacle 32); `CollisionShape2D` `Rect 5×7` at `0,0.5` (feet +4); `AnimatedSprite2D` `pos 0,-10 scale 0.2` `texture_filter 0` wired to `assets/sprites/rabbit_run.png` 5-frame strip (`AtlasTexture` 256×256 regions) for `idle/run/hop` plus `blueberry_1.png` for `attack/hurt` (`ColorRect` placeholder body/ears/eyes kept as fallback); `Camera2D` `smoothing 6 drag 0.15`. Hop arc uses `_sprite_base_y` captured in `_ready` so the rest pose always matches the scene offset.
 - **Exports:** `move_speed 130` `hop_distance 64 hop_duration 0.28 hop_cooldown 0.45 hop_iframes 0.22` `max_health 5 attack_damage 1 attack_cooldown 0.18 hurt_iframe 0.8 hurt_stun 0.35`.
 - **State:** `enum State {IDLE,RUN,HOP,ATTACK,HURT,DEAD}` `health` `facing 1/-1` timers `hop_cooldown/hop/hop_iframe/attack/attack_cooldown/hurt/hurt_iframe` `hop_dir` `attack_hit_enemies`.
-- **Movement:** `get_axis` → normalized `*130` → `move_and_slide`; `RUN/IDLE` anim; `facing` flips `sprite.scale.x` (negated — strip art faces left, so `facing 1` mirrors) + `AttackHitbox.x`.
+- **Movement:** `get_axis` → normalized `*130` → `move_and_slide`; `RUN/IDLE` anim; dominant axis picks the strip — vertical (`|y|>|x|`) plays `run_up`/`run_down` from `assets/sprites/rabbit_updown.png` (top-down single frame `256×180`, black bg flood-cleared; as-drawn faces down-screen, `scale.y` flipped when moving up, `_play_anim` restores upright for all side anims), else side `run`; `facing` flips `sprite.scale.x` on `x` input only (negated — strip art faces left, so `facing 1` mirrors) + `AttackHitbox.x`.
 - **Hop:** `_start_hop:170` `dir = input or facing`, `HOP` `hop_timer 0.28` `iframes 0.22` `velocity dir*(64/0.28)` `Hurtbox monitoring=false` deferred `await 0.22 → true`, flicker `ticks/60.0%2`, retain `0.2` velocity. Cooldown `0.45+0.28`. Hop drops body mask to `1`, so the player sails over layer-32 obstacles (see §7).
 - **Attack:** `_start_attack:193` `ATTACK` `timer 0.36` `await 0.08 → active true` `AttackHitbox 10×6.5 at 5.5,-3.5 layer4 mask8` → `await 0.12 → false`, root `0.15` speed, `cooldown 0.18`, one hit per swing `hit_enemies`, hitstop `time_scale 0.08 0.05s` `tween` none.
 - **Damage:** `Hurtbox Area2D layer2 mask16` vs `enemy_attack 16`; `take_damage:212` ignores if `DEAD`/`hurt_iframe`/`hop_iframe`, `health--` `health_changed`, `HURT 0.35 i-frame 0.8` knock `180` flash tween, `_die:240` `DEAD` `Hurtbox false deferred` `Collision true deferred` `died` `modulate 0.6`.
-- **Visual Hook:** `SpriteFrames` `idle` (frame 0) / `run` (5 frames @10fps, loop) / `hop` (5 frames @12fps) from `assets/sprites/rabbit_run.png` (`1280×256` strip, bg `#3E3E3E` flood-cleared to transparent, `Nearest` `Mipmaps Off`); `attack/hurt` still `blueberry_1.png` (64×64). Anim names kept. Enemy still uses `ColorRect` placeholder.
+- **Visual Hook:** `SpriteFrames` `idle` (frame 0) / `run` (5 frames @10fps, loop) / `hop` (5 frames @12fps) from `assets/sprites/rabbit_run.png` (`1280×256` strip, bg `#3E3E3E` flood-cleared to transparent, `Nearest` `Mipmaps Off`); `run_up`/`run_down` (single frame @10fps, loop) from `assets/sprites/rabbit_updown.png` (`256×180` top-down, black bg border-flood-cleared); `attack/hurt` still `blueberry_1.png` (64×64). Anim names kept. Enemy still uses `ColorRect` placeholder.
 
 ### Physics
 
@@ -88,10 +88,12 @@ Kill → score + `kills%6 → wave++`, `kills%8 → wave++` (spawner ramp, futur
 
 ```
 Main [Node2D] y_sort script=main.gd GameState START/PLAYING/GAME_OVER
-├── Ground ColorRect (hidden legacy, `visible=false`) + GroundGrid lines
+├── Ground ColorRect visible (moss underlay `-1216,-108→1216,532`, z -2; GroundGrid hidden legacy)
+├── GroundTiles TileMapLayer (`scripts/ground.gd`, z -1, modulate 0.82): runtime-built TileSet tiling `pix_tuft.png` (38×10 @0.5 = 64px tiles covering walls; 6 flip/offset alternative variants, deterministic `SEED 20261008`)
 ├── Walls StaticBody Top at horizon (y=-100, 2400×16) / Bottom ±458 / Left-Right ±1208 16×900 — nothing walks above the ridge
 ├── Player instance Player.tscn 0,0
-├── Obstacles Node2D y_sort (jump-over crate/rock/log + KipperFalcon forest rocks/trees, `Obstacle.tscn`/`obstacle.gd`, layer 32; HOP mask drops to 1 to clear them)
+├── Obstacles Node2D y_sort (jump-over crate/rock/log + KipperFalcon forest rocks/trees + 2DPIXX `pix_*` stump/log/mound cells @0.5, `Obstacle.tscn`/`obstacle.gd`, layer 32; HOP mask drops to 1 to clear them)
+├── Flora 2DPIXX props as DIRECT Main children (y_sort vs Player): `Flora.tscn`/`flora.gd` `decor` (bush/tuft, layer 0, no collision) + `block` (tree/rock, layer 1 = Walls, blocks player AND enemies); seeded scatter `ARENA_SEED` in `main.gd` (`flora_decor 18` / `flora_blocker 7`, spawn clear radius, `grass_1/2` excluded — iso blocks)
 ├── Enemies Node2D y_sort
 ├── SpawnTimer 2.2 one_shot false
 ├── CanvasLayer
@@ -140,6 +142,7 @@ If sluggish → `player.gd:10 move_speed 150`; hop short → `hop_distance 80`; 
 ## 11. Third-Party Assets
 
 - `assets/environment/kipper_falcon/isometric_forest/` — KipperFalcon "Isometric Forest Pixel Art 2D" Godot Store pack. Runtime PNGs are used by `scripts/obstacle.gd` for forest rock/tree variants; `ASSET_NOTES.md` and the original `README.txt` describe source and usage limits. Do not repackage this folder as a standalone asset collection.
+- `assets/vendor/2dpixx/` — 2DPIXX "Free 2D Isometric Fantasy Pack" (Godot Store, Final Release), CC-BY-4.0, author Jana Ochse (2DPIXX), www.2dpixx.de. `ATTRIBUTION.md` maps the renamed files + measured layouts (forest sheet `640×640` = 5×5 of `128×128`; char sheets `512×640` = 4×4 of `128×160`); `LICENSE.TXT` is verbatim upstream. If this art ships in-game, credit the author in the game's credits/docs.
 
 ---
 
