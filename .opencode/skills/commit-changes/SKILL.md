@@ -1,13 +1,12 @@
 ---
 name: commit-changes
-description: Group working-tree changes into related GPG-signed commits with semantic messages.
+description: Group working-tree changes into related GPG-signed commits with semantic messages, then push.
 ---
 
 # Commit Changes
 
 Turn a dirty working tree into a series of small, related, **GPG-signed**
-commits with semantic messages. Commit only — never push unless the user
-explicitly asks.
+commits with semantic messages, then push the branch.
 
 ## 0. Signing prerequisites (every time)
 
@@ -36,11 +35,11 @@ blindly.
 
 ## 2. Branch guard
 
-`main` is protected (signed commits only, no force-push, no deletion):
+`main` is protected (signed commits only, no force-push/deletion, merge via PR):
 
 - If the current branch is `main`, stop and agree a `feat/*` branch name
-  with the user first — never commit directly on `main`.
-- Never push to `main`; merging happens via PR.
+  with the user first — never commit on `main`, never push to `main`.
+- Never force-push. Plain `git push` only.
 
 ## 3. Group similar files per commit
 
@@ -102,5 +101,21 @@ git log -1 --show-signature
 git status --short   # confirm the group is gone, nothing extra staged
 ```
 
-Then report: SHA + message per commit, files in each, anything deliberately
-left uncommitted and why. Do not push.
+Then report per-commit: SHA + message, files in each. Then push (§6)
+and report the push result — not the other way round.
+
+## 6. Push
+
+After all groups are committed and verified:
+
+```sh
+git push -u origin <branch>
+```
+
+- Only push the current `feat/*` (or other non-`main`) branch. Never push
+  to `main` — merging happens via PR.
+- Set upstream with `-u` on first push so follow-ups are plain `git push`.
+- Never force-push (`--force`, `-f`). If the push is rejected, stop and
+  report — do not rebase or rewrite history without asking.
+- Skip pushing only when the user says so (e.g. `/commit` hint says
+  "no push"); say so in the final report.

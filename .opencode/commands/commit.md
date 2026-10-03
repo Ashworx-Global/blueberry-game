@@ -14,4 +14,6 @@ Rules:
 - Sign every commit (`-S`); verify with `git log -1 --show-signature`.
   Never fall back to an unsigned commit; on signing failure, stop and ask.
 - Leave `.godot/`, secrets, and unrelated files uncommitted; report them.
-- Do not push — report SHAs and stop.
+- Push the branch with `git push -u origin <branch>` (never to `main`,
+  never force-push); skip only if the hint says "no push".
+- Report SHAs, files per commit, anything left uncommitted, and the push result.
