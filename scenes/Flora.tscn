@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://b1ueb3rry_flora"]
+
+[ext_resource type="Script" path="res://scripts/flora.gd" id="1_flora"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_flora"]
+size = Vector2(24, 12)
+
+[node name="Flora" type="StaticBody2D"]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_flora")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
+shape = SubResource("RectangleShape2D_flora")
+debug_color = Color(0.4, 1, 0.5, 0.35)

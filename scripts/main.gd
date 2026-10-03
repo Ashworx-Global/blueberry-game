@@ -27,12 +27,24 @@ var kills: int = 0
 var current_state: GameState = GameState.START
 var enemy_scene: PackedScene = preload("res://scenes/Enemy.tscn")
 var obstacle_scene: PackedScene = preload("res://scenes/Obstacle.tscn")
+var flora_scene: PackedScene = preload("res://scenes/Flora.tscn")
 
 @export var obstacle_count: int = 14
+@export var flora_decor_count: int = 18
+@export var flora_blocker_count: int = 7
 @onready var obstacles: Node2D = $Obstacles
+
+# Deterministic arena layout: same seed every run so the forest is identical
+# until deliberately changed (bump SEED for a new layout).
+const ARENA_SEED := 20261003
+var rng := RandomNumberGenerator.new()
+
+const FLORA_DECOR := ["bush_1", "bush_2", "tuft"] # grass_1/2 excluded: iso blocks, wrong for flat floor
+const FLORA_BLOCK := ["tree_1", "tree_2", "tree_3", "tree_4", "rock"]
 
 func _ready() -> void:
 	y_sort_enabled = true
+	rng.seed = ARENA_SEED
 	spawn_timer.wait_time = spawn_interval
 	if not spawn_timer.timeout.is_connected(_on_spawn_timer_timeout):
 		spawn_timer.timeout.connect(_on_spawn_timer_timeout)
@@ -76,6 +88,9 @@ func show_start_screen() -> void:
 	if obstacles:
 		for child in obstacles.get_children():
 			child.queue_free()
+	# clear flora preview (will respawn on start)
+	for f in get_tree().get_nodes_in_group("flora"):
+		f.queue_free()
 	if hud:
 		hud.visible = false
 	if start_screen:
@@ -140,6 +155,9 @@ func start_game() -> void:
 		for child in obstacles.get_children():
 			child.queue_free()
 		_spawn_obstacles()
+	for f in get_tree().get_nodes_in_group("flora"):
+		f.queue_free()
+	_spawn_flora()
 	# spawn initial wave
 	for _i in 2:
 		_spawn_enemy()
@@ -222,8 +240,8 @@ func _spawn_obstacles() -> void:
 	var spawned := 0
 	while spawned < obstacle_count and attempts < 120:
 		attempts += 1
-		var x := randf_range(-arena_size.x * 0.46, arena_size.x * 0.46)
-		var y := randf_range(HORIZON_MIN_Y, arena_size.y * 0.42)
+		var x := rng.randf_range(-arena_size.x * 0.46, arena_size.x * 0.46)
+		var y := rng.randf_range(HORIZON_MIN_Y, arena_size.y * 0.42)
 		var pos := Vector2(x, y)
 		# keep start area clear for fair begin
 		if pos.distance_to(Vector2.ZERO) < 140.0:
@@ -243,6 +261,59 @@ func _spawn_obstacles() -> void:
 		obstacles.add_child(o)
 		spawned += 1
 	# if we spawned fewer due to constraints, it's okay
+
+# ── Forest floor (2DPIXX) ───────────────────────────────────
+# Flora are DIRECT children of Main (not in a container) so Main's y_sort
+# orders every prop against the Player by y — correct walk-behind depth.
+
+func _spawn_flora() -> void:
+	if flora_scene == null:
+		return
+	for _i in flora_decor_count:
+		var pos := _flora_spot(false)
+		if pos == Vector2.INF:
+			break
+		_spawn_one_flora("decor", FLORA_DECOR[rng.randi() % FLORA_DECOR.size()], pos)
+	for _i in flora_blocker_count:
+		var bpos := _flora_spot(true)
+		if bpos == Vector2.INF:
+			break
+		_spawn_one_flora("block", FLORA_BLOCK[rng.randi() % FLORA_BLOCK.size()], bpos)
+
+func _spawn_one_flora(mode: String, art: String, pos: Vector2) -> void:
+	var f: Node2D = flora_scene.instantiate() as Node2D
+	f.set("mode", mode)
+	f.set("art", art)
+	f.position = pos
+	add_child(f) # direct child of Main for y_sort vs Player
+
+func _flora_spot(blocker: bool) -> Vector2:
+	# Blockers stay central (away from the edge enemy-spawn ring) and sparse;
+	# decor may go anywhere walkable. Returns Vector2.INF when no spot found.
+	var x_range := arena_size.x * (0.35 if blocker else 0.46)
+	var y_max := arena_size.y * (0.30 if blocker else 0.42)
+	var clear := 220.0 if blocker else 120.0
+	var spacing := 150.0 if blocker else 60.0
+	for _a in 60:
+		var pos := Vector2(rng.randf_range(-x_range, x_range), rng.randf_range(HORIZON_MIN_Y, y_max))
+		if pos.distance_to(Vector2.ZERO) < clear:
+			continue
+		if absf(pos.x) > arena_size.x * 0.5 - 48 or pos.y > arena_size.y * 0.5 - 24:
+			continue
+		var ok := true
+		for c in obstacles.get_children():
+			if c.global_position.distance_to(pos) < (100.0 if blocker else 50.0):
+				ok = false
+				break
+		if ok:
+			for f in get_tree().get_nodes_in_group("flora"):
+				var fn := f as Node2D
+				if fn and fn.position.distance_to(pos) < spacing:
+					ok = false
+					break
+		if ok:
+			return pos
+	return Vector2.INF
 
 func _on_enemy_died() -> void:
 	if current_state != GameState.PLAYING:

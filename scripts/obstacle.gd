@@ -25,6 +25,13 @@ const RANDOM_TYPES := [
 	"forest_tree_3",
 	"forest_dead_tree_2",
 	"forest_dead_tree_3",
+	"pix_stump_1",
+	"pix_stump_2",
+	"pix_stump_3",
+	"pix_logs_1",
+	"pix_logs_2",
+	"pix_mound_1",
+	"pix_mound_2",
 ]
 
 func _ready() -> void:
@@ -43,6 +50,7 @@ func _apply_type(t: String) -> void:
 	var tex: Texture2D = null
 	var col_size := Vector2(32, 10)
 	var sprite_offset := Vector2(0, -6)
+	var sc := Vector2.ONE
 	match t:
 		"crate":
 			tex = load("res://assets/sprites/crate.png") as Texture2D
@@ -88,12 +96,51 @@ func _apply_type(t: String) -> void:
 			tex = load("res://assets/environment/kipper_falcon/isometric_forest/trees/dead_tree_3.png") as Texture2D
 			col_size = Vector2(28, 12)
 			sprite_offset = Vector2(0, -26)
+		# 2DPIXX forest cells (128px @0.5 ≈64px; full-bleed cells read as dirt
+		# patches with the feature on top — intended). Offsets base-aligned
+		# from measured opaque bbox (see assets/vendor/2dpixx/ATTRIBUTION.md).
+		"pix_stump_1":
+			tex = load("res://assets/sprites/forest/pix_stump_1.png") as Texture2D
+			col_size = Vector2(40, 10)
+			sprite_offset = Vector2(0, -32)
+			sc = Vector2(0.5, 0.5)
+		"pix_stump_2":
+			tex = load("res://assets/sprites/forest/pix_stump_2.png") as Texture2D
+			col_size = Vector2(40, 10)
+			sprite_offset = Vector2(0, -32)
+			sc = Vector2(0.5, 0.5)
+		"pix_stump_3":
+			tex = load("res://assets/sprites/forest/pix_stump_3.png") as Texture2D
+			col_size = Vector2(40, 10)
+			sprite_offset = Vector2(0, -32)
+			sc = Vector2(0.5, 0.5)
+		"pix_logs_1":
+			tex = load("res://assets/sprites/forest/pix_logs_1.png") as Texture2D
+			col_size = Vector2(52, 8)
+			sprite_offset = Vector2(0, -2)
+			sc = Vector2(0.5, 0.5)
+		"pix_logs_2":
+			tex = load("res://assets/sprites/forest/pix_logs_2.png") as Texture2D
+			col_size = Vector2(52, 8)
+			sprite_offset = Vector2(0, -2)
+			sc = Vector2(0.5, 0.5)
+		"pix_mound_1":
+			tex = load("res://assets/sprites/forest/pix_mound_1.png") as Texture2D
+			col_size = Vector2(44, 10)
+			sprite_offset = Vector2(0, -32)
+			sc = Vector2(0.5, 0.5)
+		"pix_mound_2":
+			tex = load("res://assets/sprites/forest/pix_mound_2.png") as Texture2D
+			col_size = Vector2(44, 10)
+			sprite_offset = Vector2(0, -32)
+			sc = Vector2(0.5, 0.5)
 		_:
 			tex = load("res://assets/sprites/crate.png") as Texture2D
 	if sprite:
 		sprite.texture = tex
 		sprite.centered = true
 		sprite.offset = sprite_offset
+		sprite.scale = sc
 		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	if collision and collision.shape is RectangleShape2D:
 		(collision.shape as RectangleShape2D).size = col_size
