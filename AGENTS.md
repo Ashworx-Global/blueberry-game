@@ -32,7 +32,7 @@ Follow `SPEC.md` if any docs conflict, then update stale docs in the same change
 - `scenes/StartScreen.tscn`, `scenes/GameOverScreen.tscn` — shell flow UI.
 - `scenes/Background.tscn`, `scenes/Parallax*.tscn`, `scripts/background.gd`, `parallax_spec.md` — background/parallax work.
 - `.opencode/skills/run-game/` — `run-game` skill: run/play/verify the game via `run-game.sh` (`play`/`editor`/`import`/`check`/`smoke`), not ad-hoc `godot` commands. Shortcut: `/run` (`.opencode/commands/run.md`, defaults to headless `smoke`).
-- `.opencode/skills/commit-changes/` — `commit-changes` skill: group changes into related GPG-signed semantic commits (`<type>(<scope>): <subject>`), never on `main`, never push. Shortcut: `/commit` (`.opencode/commands/commit.md`).
+- `.opencode/skills/commit-changes/` — `commit-changes` skill: group changes into related GPG-signed semantic commits (`<type>(<scope>): <subject>`) and push the `feat/*` branch (never on `main`, never force-push). Shortcut: `/commit` (`.opencode/commands/commit.md`).
 
 ## Before Finishing
 

@@ -79,7 +79,7 @@
 | `assets/backgrounds/*.png` | — | tileable forest set; edit rules `parallax_spec.md` §10 |
 | `icon.svg` | — | `project.godot:11` + StartScreen Icon |
 | `.opencode/skills/run-game/` | — | `SKILL.md` + `run-game.sh` (macOS/Linux/Git Bash) + `run-game.ps1` (Windows): versioned runner — `play`/`editor`/`import`/`check`/`smoke`. `check` = `--check-only --quit` (bare `--check-only` never terminates on 4.7.2). Prefer over ad-hoc `godot ...` commands. |
-| `.opencode/skills/commit-changes/` | — | `commit-changes` skill: group working tree into related GPG-signed semantic commits (`<type>(<scope>): <subject>`); refuses `main`, never pushes. Shortcut `/commit` (`.opencode/commands/commit.md`). |
+| `.opencode/skills/commit-changes/` | — | `commit-changes` skill: group working tree into related GPG-signed semantic commits (`<type>(<scope>): <subject>`) and push the `feat/*` branch (refuses `main`, never force-pushes). Shortcut `/commit` (`.opencode/commands/commit.md`). |
 
 Verify: UID strings in `*.import` vs `ext_resource` in `.tscn` (`Select-String uid` on PowerShell, `grep -h uid *.import` on macOS/Linux).
 
