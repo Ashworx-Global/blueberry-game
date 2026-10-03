@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://b1ueb3rry_main"]
+[gd_scene load_steps=9 format=3 uid="uid://b1ueb3rry_main"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="PackedScene" uid="uid://b1ueb3rry_p1ayer" path="res://scenes/Player.tscn" id="2_player"]
 [ext_resource type="PackedScene" uid="uid://b1ueb3rry_startscreen" path="res://scenes/StartScreen.tscn" id="3_start"]
 [ext_resource type="PackedScene" uid="uid://b1ueb3rry_gameover" path="res://scenes/GameOverScreen.tscn" id="4_over"]
 [ext_resource type="PackedScene" uid="uid://b1ueb3rry_bg" path="res://scenes/Background.tscn" id="5_bg"]
+[ext_resource type="Script" path="res://scripts/ground.gd" id="6_ground"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_h"]
 size = Vector2(2400, 16)
@@ -19,15 +20,17 @@ y_sort_enabled = true
 [node name="Background" parent="." instance=ExtResource("5_bg")]
 
 [node name="Ground" type="ColorRect" parent="."]
-visible = false
-offset_left = -400.0
-offset_top = -200.0
-offset_right = 400.0
-offset_bottom = 200.0
-color = Color(0.188235, 0.227451, 0.2, 1)
+visible = true
+z_index = -2
+offset_left = -1216.0
+offset_top = -108.0
+offset_right = 1216.0
+offset_bottom = 532.0
+color = Color(0.0784314, 0.2, 0.0941176, 1)
 metadata/_edit_use_rect = true
 
 [node name="GroundGrid" type="Node2D" parent="Ground"]
+visible = false
 
 [node name="TileLine0" type="ColorRect" parent="Ground/GroundGrid"]
 offset_left = 0.0
@@ -52,6 +55,14 @@ offset_right = 800.0
 offset_bottom = 1.0
 color = Color(1, 1, 1, 0.05)
 position = Vector2(-400, -100)
+
+[node name="GroundTiles" type="TileMapLayer" parent="."]
+z_index = -1
+modulate = Color(0.82, 0.82, 0.82, 1)
+texture_filter = 0
+position = Vector2(-1216, -108)
+scale = Vector2(0.5, 0.5)
+script = ExtResource("6_ground")
 
 [node name="Walls" type="StaticBody2D" parent="."]
 collision_layer = 1
