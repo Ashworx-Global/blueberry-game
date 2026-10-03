@@ -62,7 +62,7 @@
 
 ## How to Pick Up
 
-1. `git pull` → `godot --headless --path . --import` → `godot --headless --path . --quit --verbose`, filter `WARNING` (per-OS paths in `MEMORY.md` §1).
+1. `git pull` → `.opencode/skills/run-game/run-game.sh import` → `.opencode/skills/run-game/run-game.sh smoke`, filter `WARNING` (per-OS paths in `MEMORY.md` §1; `GODOT_BIN` overrides the exe).
 2. Check `MEMORY.md:2` boot flow; edit `.tscn` with `load_steps = ext+sub` ordering.
 3. For hop/attack tuning: `player.gd:10` `hop_*` `attack_*`, `Main.tscn` Hitbox offset.
 4. For UI: `StartScreen.tscn` `Center/VBox` `GameOverScreen.tscn` `HBox` `ALWAYS`.

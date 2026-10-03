@@ -31,6 +31,8 @@ Follow `SPEC.md` if any docs conflict, then update stale docs in the same change
 - `scenes/Obstacle.tscn` + `scripts/obstacle.gd` — jump-over crate/rock/log plus KipperFalcon forest rocks/trees, layer 32.
 - `scenes/StartScreen.tscn`, `scenes/GameOverScreen.tscn` — shell flow UI.
 - `scenes/Background.tscn`, `scenes/Parallax*.tscn`, `scripts/background.gd`, `parallax_spec.md` — background/parallax work.
+- `.opencode/skills/run-game/` — `run-game` skill: run/play/verify the game via `run-game.sh` (`play`/`editor`/`import`/`check`/`smoke`), not ad-hoc `godot` commands. Shortcut: `/run` (`.opencode/commands/run.md`, defaults to headless `smoke`).
+- `.opencode/skills/commit-changes/` — `commit-changes` skill: group changes into related GPG-signed semantic commits (`<type>(<scope>): <subject>`), never on `main`, never push. Shortcut: `/commit` (`.opencode/commands/commit.md`).
 
 ## Before Finishing
 

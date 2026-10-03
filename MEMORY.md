@@ -18,6 +18,7 @@
 
 - **Windows example exe:** `C:\Dev\Gadot\Godot_v4.7.2-stable_win64_console.exe` (use the `_console` build for headless output).
 - **macOS example exe:** `/Applications/Godot.app/Contents/MacOS/Godot`.
+- **Shortcut:** prefer the `run-game` skill (`.opencode/skills/run-game/`): `run-game.sh play|editor|import|check|smoke` resolves the exe and repo root for you (`GODOT_BIN` overrides). Note `check` runs `--check-only --quit` because bare `--check-only` never terminates on 4.7.2.
 
 - **Entry:** `project.godot:9` `run/main_scene="res://scenes/Main.tscn"` (`uid://b1ueb3rry_main`) — `Main` `Node2D` owns `StartScreen`/`GameOverScreen` via `CanvasLayer`. Do NOT open parent folder as project.
 - **Renderer:** `GL Compatibility` (`project.godot:18`) `textures/canvas_textures/default_texture_filter=0` nearest, `viewport 640×360 → window 1280×720`, `canvas_items` stretch.
@@ -77,6 +78,8 @@
 | `scripts/background.gd` | — | period wrap (`SKY 1280/CLOUD 256/FOREST 512`), pinned FG strips |
 | `assets/backgrounds/*.png` | — | tileable forest set; edit rules `parallax_spec.md` §10 |
 | `icon.svg` | — | `project.godot:11` + StartScreen Icon |
+| `.opencode/skills/run-game/` | — | `SKILL.md` + `run-game.sh` (macOS/Linux/Git Bash) + `run-game.ps1` (Windows): versioned runner — `play`/`editor`/`import`/`check`/`smoke`. `check` = `--check-only --quit` (bare `--check-only` never terminates on 4.7.2). Prefer over ad-hoc `godot ...` commands. |
+| `.opencode/skills/commit-changes/` | — | `commit-changes` skill: group working tree into related GPG-signed semantic commits (`<type>(<scope>): <subject>`); refuses `main`, never pushes. Shortcut `/commit` (`.opencode/commands/commit.md`). |
 
 Verify: UID strings in `*.import` vs `ext_resource` in `.tscn` (`Select-String uid` on PowerShell, `grep -h uid *.import` on macOS/Linux).
 
