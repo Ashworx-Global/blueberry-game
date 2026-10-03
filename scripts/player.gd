@@ -136,9 +136,19 @@ func _physics_process(delta: float) -> void:
 	# movement
 	if input_vec != Vector2.ZERO:
 		velocity = input_vec * move_speed
-		if state != State.RUN:
+		# vertical movement uses the top-down strip, else the side strip
+		var want_anim := "run"
+		if absf(input_vec.y) > absf(input_vec.x):
+			# top-down art faces down-screen as drawn: flip it when moving up
+			if input_vec.y > 0.0:
+				want_anim = "run_down"
+				sprite.scale.y = abs(sprite.scale.y)
+			else:
+				want_anim = "run_up"
+				sprite.scale.y = -abs(sprite.scale.y)
+		if state != State.RUN or sprite.animation != StringName(want_anim):
 			state = State.RUN
-			_play_anim("run")
+			_play_anim(want_anim)
 	else:
 		velocity = Vector2.ZERO
 		if state != State.IDLE:
@@ -175,6 +185,9 @@ func _update_facing_visual() -> void:
 	attack_hitbox.position.x = abs(attack_hitbox.position.x) * facing
 
 func _play_anim(anim_name: String) -> void:
+	# vertical flip only applies to the top-down strip: upright for all others
+	if anim_name != "run_up" and anim_name != "run_down":
+		sprite.scale.y = abs(sprite.scale.y)
 	if sprite.sprite_frames and sprite.sprite_frames.has_animation(anim_name):
 		sprite.play(anim_name)
 

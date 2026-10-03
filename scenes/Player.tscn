@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://b1ueb3rry_p1ayer"]
+[gd_scene load_steps=15 format=3 uid="uid://b1ueb3rry_p1ayer"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_1p1ayer"]
 [ext_resource type="Texture2D" uid="uid://ddp8fxr6as2ox" path="res://blueberry_1.png" id="2_blue"]
 [ext_resource type="Texture2D" path="res://assets/sprites/rabbit_run.png" id="3_rabbit"]
+[ext_resource type="Texture2D" path="res://assets/sprites/rabbit_updown.png" id="4_updown"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_run0"]
 atlas = ExtResource("3_rabbit")
@@ -23,6 +24,10 @@ region = Rect2(768, 0, 256, 256)
 [sub_resource type="AtlasTexture" id="AtlasTexture_run4"]
 atlas = ExtResource("3_rabbit")
 region = Rect2(1024, 0, 256, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_updown0"]
+atlas = ExtResource("4_updown")
+region = Rect2(0, 0, 256, 180)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_player"]
 animations = [{
@@ -52,6 +57,22 @@ animations = [{
 }],
 "loop": true,
 "name": &"run",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_updown0")
+}],
+"loop": true,
+"name": &"run_up",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_updown0")
+}],
+"loop": true,
+"name": &"run_down",
 "speed": 10.0
 }, {
 "frames": [{
